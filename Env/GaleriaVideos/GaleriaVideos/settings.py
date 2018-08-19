@@ -25,8 +25,7 @@ SECRET_KEY = '8d9pa*-e5!lu2ay0zc#3#7de^6r@2sicd(81-po1+cyagielty'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS=['djangobasicwebimagedisplayer.herokuapp.com', 'localhost']
 
 # Application definition
 
@@ -78,11 +77,11 @@ WSGI_APPLICATION = 'GaleriaVideos.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'galeria_videos',
-        'USER': 'postgres',
-        'PASSWORD': 'Jorge.01',
-        'HOST': '127.0.0.1',
-        'PORT': '57100',
+        'NAME': "galeria_videos",
+        'USER': "Willy",
+        "PASSWORD": "",
+        "HOST": "127.0.0.1",
+        "PORT": "5432"
     }
 }
 
@@ -101,7 +100,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    }
 ]
 
 
@@ -127,3 +126,6 @@ STATIC_ROOT = 'staticfiles'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'media'),
 )
+
+import dj_database_url
+DATABASES['default'] = dj_database_url.config()
