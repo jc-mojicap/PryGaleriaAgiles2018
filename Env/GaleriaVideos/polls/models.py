@@ -21,12 +21,12 @@ class Media(models.Model):
     fecha_creacion = models.DateField()
     ciudad = models.CharField(max_length=30, blank=True)
     pais = models.CharField(max_length=30, blank=True)
-    id_categoria = models.ForeignKey(Categoria.id_categoria, null=True)
-    id_tipo = models.ForeignKey(Tipo.id_tipo, null=True)
+    id_categoria = models.ForeignKey(Categoria, null=True)
+    id_tipo = models.ForeignKey(Tipo, null=True)
 
 
 class MediaForm(ModelForm):
 
     class Meta:
         model = Media
-        fields = ['url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'categoria']
+        fields = ['url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais']
