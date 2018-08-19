@@ -1,10 +1,56 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Galeria</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script>
+        (function(){
+            $.getJSON("http://localhost:9000/polls/media").done(function (data) {
+                $.each(data, function (i, item) {
+                    if(item.fields.id_tipo === 1 ) {
+                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+                            '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
+                    }
+                    else {
+                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+                            '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
+                    }
+                });
+            });
+        })();
+
+    </script>
 </head>
 <body>
-
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-target="#navbar" aria-expanded="false">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="">Galeria</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav"></ul>
+            <ul class="nav navbar-nav navbar-right">
+                <!--<li id="add_image"><a href="http://localhost:9000/polls/agregarImagen">Agregar Imagen</a></li>-->
+                <!--<li id="add_user"><a href="http://localhost:9000/polls/agregarUsuario">Registro</a></li>-->
+                <!--<li id="cerrar_sesion"><a class="glyphicon glyphicon-log-out" href="#"-->
+                                          <!--id="clic_cerrar_sesion" onclick="logout();">Logout</a></li>-->
+                <!--<li id="login_user"><a class="glyphicon glyphicon-log-in"-->
+                                       <!--href="http://localhost:9000/polls/ingresar">Login</a></li>-->
+            </ul>
+        </div>
+    </div>
+</nav>
+<h1 align="center">Galeria</h1>
+    <div class="row" id="media"></div>
 </body>
 </html>
