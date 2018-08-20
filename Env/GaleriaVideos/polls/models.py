@@ -8,10 +8,16 @@ class Categoria(models.Model):
     id_categoria = models.IntegerField(auto_created=True, primary_key=True)
     nombre = models.CharField(max_length=30, blank=True)
 
+    def __unicode__(self):
+        return self.nombre
+
 
 class Tipo(models.Model):
     id_tipo = models.IntegerField(auto_created=True, primary_key=True)
     nombre = models.CharField(max_length=30, blank=True)
+
+    def __unicode__(self):
+        return self.nombre
 
 
 class Media(models.Model):
@@ -23,6 +29,9 @@ class Media(models.Model):
     pais = models.CharField(max_length=30, blank=True)
     id_categoria = models.ForeignKey(Categoria, null=True)
     id_tipo = models.ForeignKey(Tipo, null=True)
+
+    def __unicode__(self):
+        return self.titulo
 
 
 class MediaForm(ModelForm):
