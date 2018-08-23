@@ -9,15 +9,15 @@
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script>
         (function(){
-            $.getJSON("http://localhost:9000/polls/media").done(function (data) {
+            $.getJSON("https://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
                 $.each(data, function (i, item) {
                     if(item.fields.id_tipo === 1 ) {
-                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well"><audio controls width="500px" height="300px">' +
-                            '<source src="' + item.fields.url + '" type="audio/mpeg" class="embed-responsive-item"></audio></div>');
+                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+                            '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
                     }
                     else {
-                        $("#media").prepend('<div class="embed-responsive embed-responsive-16by9">' +
-                            '<iframe class="embed-responsive-item" src="' + item.fields.url + '" allowfullscreen></iframe></div>');
+                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+                            '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
                     }
                 });
             });
@@ -51,6 +51,6 @@
     </div>
 </nav>
 <h1 align="center">Galeria</h1>
-    <div class="row" id="imagenes"></div>
+    <div class="row" id="media"></div>
 </body>
 </html>

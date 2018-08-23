@@ -16,7 +16,7 @@ def index(request):
     return HttpResponse(serializers.serialize("json", lista_media))
 
 
-def ver_imagenes(request):
+def ver_media(request):
     return render(request, "polls/index.html")
 
 
