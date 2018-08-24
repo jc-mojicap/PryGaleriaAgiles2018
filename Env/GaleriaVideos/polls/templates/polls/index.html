@@ -11,14 +11,8 @@
         (function(){
             $.getJSON("https://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
                 $.each(data, function (i, item) {
-                    if(item.fields.id_tipo === 1 ) {
-                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
-                            '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
-                    }
-                    else {
-                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
-                            '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
-                    }
+                    $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+                        '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
                 });
             });
         })();
