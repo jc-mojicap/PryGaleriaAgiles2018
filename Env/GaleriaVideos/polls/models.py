@@ -31,8 +31,28 @@ class Media(models.Model):
     id_categoria = models.ForeignKey(Categoria, null=True)
     id_tipo = models.ForeignKey(Tipo, null=True)
 
-    def __unicode__(self):
-        return self.titulo
+class Usuario(models.Model):
+    id_usuario = models.IntegerField(auto_created=True, primary_key=True)
+    nombre = models.CharField(max_length=30, blank=True)
+    apellido = models.CharField(max_length=30, blank=True)
+    foto = models.CharField(max_length=1000,blank=True)
+    pais = models.CharField(max_length=30, blank=True)
+    ciudad = models.CharField(max_length=30,blank=True)
+    email = models.CharField(max_length=204, blank=True)
+    username = models.CharField(max_length=30, blank=True)
+
+
+class Clip(models.Model):
+    id_nombre_clip = models.IntegerField(auto_created=True, primary_key=True)
+    nombre_ = models.CharField(max_length=30, blank=True)
+    seg_ini = models.TimeField()
+    seg_fin = models.TimeField()
+    id_usuario = models.ForeignKey(Usuario, null=True)
+
+
+class Favorito(models.Model):
+    id_categoria = models.ForeignKey(Categoria, null=True)
+    id_usuario = models.ForeignKey(Usuario, null=True)
 
 
 class MediaForm(ModelForm):
