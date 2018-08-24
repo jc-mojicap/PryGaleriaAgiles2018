@@ -1,8 +1,13 @@
 from django.conf.urls import url
 from . import views
+from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
-    # url(r'^$', views.index, name='index'),
+    url(r'^$', views.ver_media, name='index'),
     url(r'^media/$', views.index, name='index'),
     url(r'^ver_media/$', views.ver_media, name='verMedia'),
+    url(r'^ver_detalle/$', views.ver_detalle, name='verDetalle'),
+    url(r'^detalle/(?P<media_id>[0-9]+)/$', views.detalle, name='detalle'),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
