@@ -44,7 +44,7 @@ class Usuario(models.Model):
 
 class Clip(models.Model):
     id_nombre_clip = models.IntegerField(auto_created=True, primary_key=True)
-    nombre_ = models.CharField(max_length=30, blank=True)
+    nombre = models.CharField(max_length=30, blank=True)
     seg_ini = models.TimeField()
     seg_fin = models.TimeField()
     id_usuario = models.ForeignKey(Usuario, null=True)
