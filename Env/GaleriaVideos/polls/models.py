@@ -12,15 +12,6 @@ class Categoria(models.Model):
     def __unicode__(self):
         return self.nombre
 
-
-class Tipo(models.Model):
-    id_tipo = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=30, blank=True)
-
-    def __unicode__(self):
-        return self.nombre
-
-
 class Usuario(models.Model):
     id_usuario = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=30, blank=True)
@@ -30,6 +21,7 @@ class Usuario(models.Model):
     ciudad = models.CharField(max_length=30,blank=True)
     email = models.CharField(max_length=204, blank=True)
     username = models.CharField(max_length=30, blank=True)
+    password = models.CharField(max_length=30,blank=False)
 
     def __unicode__(self):
         return self.nombre
@@ -44,7 +36,7 @@ class Media(models.Model):
     ciudad = models.CharField(max_length=30, blank=True)
     pais = models.CharField(max_length=30, blank=True)
     categoria = models.ForeignKey(Categoria, null=True)
-    tipo = models.ForeignKey(Tipo, null=True)
+    tipo = models.CharField(max_length=30, blank=True)
     usuario = models.ForeignKey(Usuario, null=True)
 
     def __unicode__(self):
