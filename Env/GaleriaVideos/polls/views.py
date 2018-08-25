@@ -11,6 +11,8 @@ from .models import UsuarioSerializer
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from .forms import UsuarioForm
+
 
 # Create your views here.
 @csrf_exempt
@@ -31,3 +33,7 @@ def ver_media(request):
 
 def ver_detalle(request):
     return render(request, "polls/detalle_video.html")
+
+def registrar_usuario(request):
+    form = UsuarioForm()
+    return  render(request,"polls/registrar_usuario.html",{'form':form})
