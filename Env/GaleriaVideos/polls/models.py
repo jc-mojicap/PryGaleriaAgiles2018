@@ -12,6 +12,7 @@ class Categoria(models.Model):
     def __unicode__(self):
         return self.nombre
 
+
 class Usuario(models.Model):
     id_usuario = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=30, blank=True)
@@ -48,7 +49,8 @@ class Clip(models.Model):
     nombre = models.CharField(max_length=30, blank=True)
     seg_ini = models.TimeField()
     seg_fin = models.TimeField()
-    id_usuario = models.ForeignKey(Usuario, null=True)
+    usuario = models.ForeignKey(Usuario, null=True)
+    media = models.ForeignKey(Media, null=True)
 
     def __unicode__(self):
         return self.nombre
@@ -60,13 +62,6 @@ class Favorito(models.Model):
 
     def __unicode__(self):
         return self.id_categoria
-
-
-class TipoSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Tipo
-        fields = ('nombre')
 
 
 class CategoriaSerializer(serializers.ModelSerializer):
@@ -86,8 +81,6 @@ class UsuarioSerializer(serializers.ModelSerializer):
 class MediaSerializer(serializers.ModelSerializer):
     owner = UsuarioSerializer(read_only=True)
     ownerId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Usuario.objects.all(), source='usuario')
-    tipo = TipoSerializer(read_only=True, source='tipo')
-    categoria = TipoSerializer(read_only=True, source='categoria')
 
     class Meta:
         model = Media

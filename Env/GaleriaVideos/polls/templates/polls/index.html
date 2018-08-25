@@ -12,9 +12,25 @@
             // $.getJSON("https://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
             $.getJSON("/polls/media").done(function (data) {
                 $.each(data, function (i, item) {
-                    $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+                    if(item.fields.tipo.toUpperCase() == "AUDIO"){
+                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+                            '<a href="/polls/ver_detalle?id=' + item.pk + '">' +
+                            '<iframe width="300" height="200" scrolling="no" frameborder="0" ' +
+                            'src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+ item.fields.url +
+                            '&color=%23ff5500&visual=true&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&controls=0" ></iframe></a>' +
+                            '<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">ver detalle</p></a>');
+                    }
+                    else if(item.fields.tipo.toUpperCase() == "VIDEO"){
+                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
                         '<a href="/polls/ver_detalle?id=' + item.pk + '">' +
-                        '<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>');
+                            '<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
+                            '<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">ver detalle</p></a>');
+                    }
+                    else {
+
+                    }
+
+
                 });
             });
         })();
