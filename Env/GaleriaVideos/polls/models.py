@@ -43,9 +43,9 @@ class Media(models.Model):
     fecha_creacion = models.DateField()
     ciudad = models.CharField(max_length=30, blank=True)
     pais = models.CharField(max_length=30, blank=True)
-    id_categoria = models.ForeignKey(Categoria, null=True)
-    id_tipo = models.ForeignKey(Tipo, null=True)
-    id_usuario = models.ForeignKey(Usuario, null=True)
+    categoria = models.ForeignKey(Categoria, null=True)
+    tipo = models.ForeignKey(Tipo, null=True)
+    usuario = models.ForeignKey(Usuario, null=True)
 
     def __unicode__(self):
         return self.titulo
@@ -100,3 +100,4 @@ class MediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Media
         fields = ('url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'categoria', 'tipo', 'usuario')
+

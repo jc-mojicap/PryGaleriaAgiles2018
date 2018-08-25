@@ -3,10 +3,37 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Detalles</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <script>
+        $( function() {
+            // run the currently selected effect
+            function runEffect() {
+                // get effect type from
+                var selectedEffect = $( "Blind" ).val();
+
+                // //Run the effect
+                if($( "#effect" ).is(":visible")){
+                    $( "#effect" ).hide( selectedEffect);
+                    $( "#button" ).text("Mostrar Clips");
+                }
+                else{
+                    $( "#effect" ).show( selectedEffect);
+                    $( "#button" ).text("Ocultar Clips");
+                }
+            };
+            // Set effect from select menu value
+            $( "#button" ).on( "click", function() {
+                runEffect();
+            });
+        });
+    </script>
     <script>
         function obtenerValorParametro(sParametroNombre) {
             var sPaginaURL = window.location.search.substring(1);
@@ -28,9 +55,16 @@
                     $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
                         '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' +
                         item.fields.url + '?controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
-                     $.each(item.fields, function (i, item) {
-                         $("#descr").prepend('<p>' + item +'</p>');
-                     });
+                    $("#descr").prepend('<p>' + '<b>Usuario:</b>  ' + item.fields['usuario'] +'</p>');
+                    $("#descr").prepend('<p>' + '<b>Ciudad:</b>  ' + item.fields['ciudad'] +'</p>');
+                    $("#descr").prepend('<p>' + '<b>Pais:</b>  ' + item.fields['pais'] +'</p>');
+                    $("#descr").prepend('<p>' + '<b>Fecha Creación:</b>  ' + item.fields['fecha_creacion'] +'</p>');
+                    $("#descr").prepend('<p>' + '<b>Autor:</b>  ' + item.fields['autor'] +'</p>');
+                    $("#descr").prepend('<p>' + '<b>Titulo:</b> ' + item.fields['titulo'] +'</p>');
+
+                     // $.each(item.fields, function (i, item) {
+                     //     $("#descr").prepend('<p>' + item['url'] +'</p>');
+                     // });
                     // $("#descr").prepend('<div><p>' + item.fields + ':'  + item.fields.url + '</p></div>');
                 });
             });
@@ -68,5 +102,17 @@
 <h1 align="center">Detalle Galeria</h1>
     <div class="col-md-6" id="media"></div>
     <div class="col-md-6" id="descr"></div>
+    <button id="button" class="ui-state-default ui-corner-all">Mostrar Clips</button>
+    <div class="row" id="clips">
+        <div id="effect" class="ui-widget-content ui-corner-all" hidden = "True">
+            <h3>Clips</h3>
+            <p>
+              Clips
+            </p>
+            <button type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+    </div>
 </body>
 </html>
