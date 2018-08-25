@@ -52,9 +52,20 @@
             // $.getJSON("http://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
             $.getJSON('/polls/detalle/'+obtenerValorParametro("id")).done(function (data) {
                 $.each(data, function (i, item) {
-                    $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
+                    if(item.fields.tipo.toUpperCase() == "AUDIO"){
+                        $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
+                            '<iframe class="embed-responsive-item" scrolling="no"   frameborder="no" ' +
+                            'src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+ item.fields.url +
+                            '&color=%23ff5500&visual=true&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&controls=0" ></iframe>');
+                    }
+                    else if(item.fields.tipo.toUpperCase() == "VIDEO"){
+                        $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
                         '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' +
                         item.fields.url + '?controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
+                    }
+                    else {
+
+                    }
                     $("#descr").prepend('<p>' + '<b>Usuario:</b>  ' + item.fields['usuario'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Ciudad:</b>  ' + item.fields['ciudad'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Pais:</b>  ' + item.fields['pais'] +'</p>');
@@ -108,6 +119,9 @@
             <h3>Clips</h3>
             <p>
               Clips
+                <button type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-play"></span>
+            </button>
             </p>
             <button type="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-plus"></span>
