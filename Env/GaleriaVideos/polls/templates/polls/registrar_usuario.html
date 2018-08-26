@@ -10,19 +10,14 @@
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 </head>
 <body>
-    <div class="page-header">
-        <a href="{% url 'post_new' %}" class="top-menu"><span class="glyphicon glyphicon-plus"></span></a>
-        <h1><a href="/">Django Girls Blog</a></h1>
-    </div>
-
-    <div class="content container">
-        <div class="row">
-            <div class="col-md-8">
-                {% block content %}
-                {% endblock %}
-            </div>
+<div class="border border-light">
+    <form method="POST" action="">{% csrf_token%}
+         <div class="form-group">
+            {{form.as_p}}
+                <input  class="btn btn-primary" type="submit" value="Registrarse"/>
         </div>
-    </div>
+    </form>
+</div>
 
 </body>
 </html>

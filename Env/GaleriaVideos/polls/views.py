@@ -35,5 +35,22 @@ def ver_detalle(request):
     return render(request, "polls/detalle_video.html")
 
 def registrar_usuario(request):
-    form = UsuarioForm()
-    return  render(request,"polls/registrar_usuario.html",{'form':form})
+    form = UsuarioForm(request.POST or None)
+    if form.is_valid():
+        form_data = form.cleaned_data
+        nombre = form_data.get("nombre")
+        apellido = form_data.get("apellido")
+        foto = form_data.get("foto")
+        pais = form_data.get("pais")
+        ciudad = form_data.get("ciudad")
+        email = form_data.get("email")
+        username = form_data.get("username")
+        password = form_data.get("password")
+
+        obj = Usuario.objects.create(nombre=nombre, apellido = apellido, foto = foto, pais =pais,ciudad=ciudad,email=email,username=username,password=password)
+
+
+    context = {
+        "form": form,
+    }
+    return  render(request,"polls/registrar_usuario.html",context)
