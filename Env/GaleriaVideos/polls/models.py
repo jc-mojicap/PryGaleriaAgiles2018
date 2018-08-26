@@ -83,5 +83,5 @@ class MediaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Media
-        fields = ('url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'categoria', 'tipo', 'usuario')
+        fields = ('url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'tipo', 'usuario')
 
