@@ -9,16 +9,28 @@
     <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <script>
         (function(){
-            $.getJSON("https://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
+            // $.getJSON("https://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
+            $.getJSON("/polls/media").done(function (data) {
                 $.each(data, function (i, item) {
-                    if(item.fields.id_tipo === 1 ) {
+                    if(item.fields.tipo.toUpperCase() == "AUDIO"){
                         $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
-                            '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
+                            '<a href="/polls/ver_detalle?id=' + item.pk + '">' +
+                            '<iframe width="300" height="200" scrolling="no" frameborder="0" ' +
+                            'src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+ item.fields.url +
+                            '&color=%23ff5500&visual=true&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&controls=0" ></iframe></a>' +
+                            '<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">ver detalle</p></a>');
+                    }
+                    else if(item.fields.tipo.toUpperCase() == "VIDEO"){
+                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+                        '<a href="/polls/ver_detalle?id=' + item.pk + '">' +
+                            '<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
+                            '<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">ver detalle</p></a>');
                     }
                     else {
-                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
-                            '<iframe width="300px" height="200px" src="' + item.fields.url + '?controls=1" ></iframe></div>');
+
                     }
+
+
                 });
             });
         })();
@@ -36,6 +48,7 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="">Galeria</a>
+            <a href="/polls/registrar_usuario">Registrar Usuario</a>
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav"></ul>
@@ -50,6 +63,8 @@
         </div>
     </div>
 </nav>
+<br>
+<br>
 <h1 align="center">Galeria</h1>
     <div class="row" id="media"></div>
 </body>

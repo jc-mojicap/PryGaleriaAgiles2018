@@ -25,7 +25,7 @@ SECRET_KEY = '8d9pa*-e5!lu2ay0zc#3#7de^6r@2sicd(81-po1+cyagielty'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS=['agilesgaleriagrupo4.herokuapp.com', 'localhost']
+ALLOWED_HOSTS=['agilesgaleriagrupo4.herokuapp.com', '127.0.0.1']
 
 # Application definition
 
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap3',
-    'polls',
+    'polls'
 ]
 
 MIDDLEWARE = [
@@ -78,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': "galeria_videos",
-        'USER': "Willy",
-        "PASSWORD": "",
+        'USER': "galeria",
+        "PASSWORD": "galeria",
         "HOST": "127.0.0.1",
         "PORT": "5432"
     }
@@ -127,5 +127,5 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'media'),
 )
 
-import dj_database_url
-DATABASES['default'] = dj_database_url.config()
+#import dj_database_url
+#DATABASES['default'] = dj_database_url.config()
