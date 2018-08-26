@@ -37,15 +37,15 @@
     <script>
         function obtenerValorParametro(sParametroNombre) {
             var sPaginaURL = window.location.search.substring(1);
-             var sURLVariables = sPaginaURL.split('&');
-              for (var i = 0; i < sURLVariables.length; i++) {
+            var sURLVariables = sPaginaURL.split('&');
+            for (var i = 0; i < sURLVariables.length; i++) {
                 var sParametro = sURLVariables[i].split('=');
                 if (sParametro[0] == sParametroNombre) {
-                  return sParametro[1];
+                    return sParametro[1];
                 }
-              }
-             return null;
             }
+            return null;
+        }
     </script>
     <script>
         (function(){
@@ -60,8 +60,8 @@
                     }
                     else if(item.fields.tipo.toUpperCase() == "VIDEO"){
                         $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                        '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' +
-                        item.fields.url + '?controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
+                            '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' +
+                            item.fields.url + '?controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
                     }
                     else {
 
@@ -72,15 +72,45 @@
                     $("#descr").prepend('<p>' + '<b>Fecha Creación:</b>  ' + item.fields['fecha_creacion'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Autor:</b>  ' + item.fields['autor'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Titulo:</b> ' + item.fields['titulo'] +'</p>');
-
-                     // $.each(item.fields, function (i, item) {
-                     //     $("#descr").prepend('<p>' + item['url'] +'</p>');
-                     // });
+                    // $.each(item.fields, function (i, item) {
+                    //     $("#descr").prepend('<p>' + item['url'] +'</p>');
+                    // });
                     // $("#descr").prepend('<div><p>' + item.fields + ':'  + item.fields.url + '</p></div>');
                 });
             });
         })();
 
+        (function(){
+            $.getJSON('/polls/detalle/'+obtenerValorParametro("id")+"/clips").done(function (data) {
+                $.each(data, function (i, clip) {
+                    $("#clips").prepend('<p>' + clip.nombre + '<button type="button" class="btn btn-default" id="' +  clip.nombre + '"><span class="glyphicon glyphicon-play"></span></button></p>')
+                    $("#" + clip.nombre).click(function() {
+                        loadMedia(clip)
+                    });
+                });
+            });
+        })();
+
+        function loadMedia(clip) {
+            let tipo = clip.media.tipo;
+            let url = clip.media.url;
+            let start = getSeconds(clip.seg_ini);
+            let end = getSeconds(clip.seg_fin);
+            if(tipo.toUpperCase() === "AUDIO") {
+                $("#media").html('<h1> algo</h1>')
+            } else {
+                $("#media").html('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
+                    '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' + url + '?controls=1&start=' + start + '&end=' + end + '" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
+            }
+        }
+
+        function getSeconds(time) {
+            let parts = time.split(":");
+            let hours = parseInt(parts[0]);
+            let minutes = parseInt(parts[1]);
+            let seconds = parseInt(parts[2]);
+            return (hours * 3600) + (minutes*60) + seconds;
+        }
     </script>
 </head>
 <body>
@@ -101,9 +131,9 @@
                 <!--<li id="add_image"><a href="http://localhost:9000/polls/agregarImagen">Agregar Imagen</a></li>-->
                 <!--<li id="add_user"><a href="http://localhost:9000/polls/agregarUsuario">Registro</a></li>-->
                 <!--<li id="cerrar_sesion"><a class="glyphicon glyphicon-log-out" href="#"-->
-                                          <!--id="clic_cerrar_sesion" onclick="logout();">Logout</a></li>-->
+                <!--id="clic_cerrar_sesion" onclick="logout();">Logout</a></li>-->
                 <!--<li id="login_user"><a class="glyphicon glyphicon-log-in"-->
-                                       <!--href="http://localhost:9000/polls/ingresar">Login</a></li>-->
+                <!--href="http://localhost:9000/polls/ingresar">Login</a></li>-->
             </ul>
         </div>
     </div>
@@ -111,22 +141,17 @@
 <br>
 <br>
 <h1 align="center">Detalle Galeria</h1>
-    <div class="col-md-6" id="media"></div>
-    <div class="col-md-6" id="descr"></div>
-    <button id="button" class="ui-state-default ui-corner-all">Mostrar Clips</button>
-    <div class="row" id="clips">
-        <div id="effect" class="ui-widget-content ui-corner-all" hidden = "True">
-            <h3>Clips</h3>
-            <p>
-              Clips
-                <button type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-play"></span>
-            </button>
-            </p>
-            <button type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-plus"></span>
-            </button>
-        </div>
+<div class="col-md-6" id="media"></div>
+<div class="col-md-6" id="descr"></div>
+<button id="button" class="ui-state-default ui-corner-all">Mostrar Clips</button>
+<div class="row">
+    <div id="effect" class="ui-widget-content ui-corner-all" hidden = "True">
+        <h3>Clips</h3>
+        <div id="clips"></div>
+        <button type="button" class="btn btn-default">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
     </div>
+</div>
 </body>
 </html>

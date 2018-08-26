@@ -86,3 +86,10 @@ class MediaSerializer(serializers.ModelSerializer):
         model = Media
         fields = ('url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'categoria', 'tipo', 'usuario')
 
+
+class ClipSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Clip
+        depth = 1
+        fields = "__all__"

@@ -25,7 +25,7 @@ SECRET_KEY = '8d9pa*-e5!lu2ay0zc#3#7de^6r@2sicd(81-po1+cyagielty'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS=['agilesgaleriagrupo4.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS=['agilesgaleriagrupo4.herokuapp.com', '127.0.0.1', 'localhost']
 
 # Application definition
 
@@ -78,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': "galeria_videos",
-        'USER': "galeria",
-        "PASSWORD": "galeria",
+        'USER': "Willy",
+        "PASSWORD": "",
         "HOST": "127.0.0.1",
         "PORT": "5432"
     }
