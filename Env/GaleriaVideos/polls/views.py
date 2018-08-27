@@ -6,7 +6,6 @@ from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Media, UserForm
 from .models import Usuario
-from .models import MediaSerializer
 from .models import UsuarioSerializer, Clip, ClipSerializer
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, request
