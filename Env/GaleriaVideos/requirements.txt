@@ -10,4 +10,3 @@ setuptools==40.1.0
 static3==0.7.0
 wheel==0.31.1
 djangorestframework==3.8.2
-django-toolbet==0.01
