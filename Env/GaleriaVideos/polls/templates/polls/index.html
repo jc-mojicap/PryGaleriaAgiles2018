@@ -54,13 +54,13 @@
             <ul class="nav navbar-nav"></ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
-                    <li><a class="glyphicon glyphicon-user" href="http://127.0.0.1:9000/polls/addUser">{{ user.username }} </a> </li>
+                    <li><a class="glyphicon glyphicon-user" href="/polls/addUser">{{ user.username }} </a> </li>
                     <li><a class="glyphicon glyphicon-log-out" href="{% url 'media1:logout' %}"> Logout </a> </li>
                 {% else %}
                   <!--    <li><a href="(% url 'media1:addUser' %)"> Registro </a></li>-->
                   <!--  <li><a class="glyphicon glyphicon-log-in" href="(% url 'media1:login' %)"> Login </a> </li>-->
-                 <li><a href="http://127.0.0.1:9000/polls/addUser"> Registro </a></li>
-                <li><a class="glyphicon glyphicon-log-in" href="http://127.0.0.1:9000/polls/login"> Login </a> </li>
+                 <li><a href="/polls/addUser"> Registro </a></li>
+                <li><a class="glyphicon glyphicon-log-in" href="/polls/login"> Login </a> </li>
                 {% endif %}
                 <!--<li id="add_image"><a href="http://localhost:9000/polls/agregarImagen">Agregar Imagen</a></li>-->
                 <!--<li id="add_user"><a href="http://localhost:9000/polls/agregarUsuario">Registro</a></li>-->
