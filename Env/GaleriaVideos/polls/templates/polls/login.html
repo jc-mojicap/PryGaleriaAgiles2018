@@ -1,0 +1,44 @@
+{% load bootstrap3 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+{% block content %}
+<div class ='row'>
+    <div class="col-md-4 col-md-offset-4">
+        <div class="page header">
+            <h2>Login</h2>
+        </div>
+        {% if mensaje %}
+        <div class="alert alert-danger">
+            {{ mensaje }}
+        </div>
+        {% endif %}
+
+        <form method="post" action="">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="control-label" form="username">Nombre de usuario</label>
+                <input type="text" id="username" name="username" class="form-control" value="{{ username }}">
+            </div>
+
+            <div class="form-group">
+                <label for="password">contraseña</label>
+                <input type="password" name="password" id="password" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">loggin</button>
+            <a href="{% url 'media1:index' %}" class="btn btn-primary">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+</body>
+</html>

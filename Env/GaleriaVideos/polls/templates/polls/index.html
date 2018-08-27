@@ -48,17 +48,27 @@
                 <span class="icon-bar"></span>
             </button>
             <a class="navbar-brand" href="">Galeria</a>
-            <a href="/polls/registrar_usuario">Registrar Usuario</a>
+
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav"></ul>
             <ul class="nav navbar-nav navbar-right">
+                {% if user.is_authenticated %}
+                    <li><a class="glyphicon glyphicon-user" href="http://127.0.0.1:9000/polls/addUser">{{ user.username }} </a> </li>
+                    <li><a class="glyphicon glyphicon-log-out" href="{% url 'media1:logout' %}"> Logout </a> </li>
+                {% else %}
+                  <!--    <li><a href="(% url 'media1:addUser' %)"> Registro </a></li>-->
+                  <!--  <li><a class="glyphicon glyphicon-log-in" href="(% url 'media1:login' %)"> Login </a> </li>-->
+                 <li><a href="http://127.0.0.1:9000/polls/addUser"> Registro </a></li>
+                <li><a class="glyphicon glyphicon-log-in" href="http://127.0.0.1:9000/polls/login"> Login </a> </li>
+                {% endif %}
                 <!--<li id="add_image"><a href="http://localhost:9000/polls/agregarImagen">Agregar Imagen</a></li>-->
                 <!--<li id="add_user"><a href="http://localhost:9000/polls/agregarUsuario">Registro</a></li>-->
                 <!--<li id="cerrar_sesion"><a class="glyphicon glyphicon-log-out" href="#"-->
                                           <!--id="clic_cerrar_sesion" onclick="logout();">Logout</a></li>-->
                 <!--<li id="login_user"><a class="glyphicon glyphicon-log-in"-->
                                        <!--href="http://localhost:9000/polls/ingresar">Login</a></li>-->
+
             </ul>
         </div>
     </div>
