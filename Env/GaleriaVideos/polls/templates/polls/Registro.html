@@ -1,0 +1,31 @@
+{% load bootstrap3 %}
+
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+</head>
+<body>
+{% block content %}
+<div class ='row'>
+    <div class="col-md-6 col-sm-offset-3">
+        <div class="page header">
+            <h2>sign up</h2>
+        </div>
+        <form method="post" action="">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            {% buttons %}
+            <input type="submit" value="Registrar" class="btn btn-primary"/>
+            <a href="{% url 'media1:index' %}" class="btn btn-primary">Cancelar</a>
+            {% endbuttons %}
+        </form>
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>

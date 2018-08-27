@@ -9,7 +9,10 @@ urlpatterns = [
     url(r'^ver_detalle/$', views.ver_detalle, name='verDetalle'),
     url(r'^detalle/(?P<media_id>[0-9]+)/$', views.detalle, name='detalle'),
     url(r'^registrar_usuario/$', views.registrar_usuario, name="registrarUsuario"),
-    url(r'^modificar_usuario/$', views.modificar_usuario, name="modificarUsuario")
-]
+    url(r'^modificar_usuario/$', views.modificar_usuario, name="modificarUsuario"),
+    url(r'^addUser/$', views.add_user_view, name='addUser'),
+    url(r'^login/$', views.login_view, name='login'),
+    url(r'^logout/$', views.logout_view, name='logout'),
+    ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
