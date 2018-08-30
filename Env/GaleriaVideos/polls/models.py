@@ -1,6 +1,13 @@
+import email
+
+from django.contrib.auth.forms import forms
+from django.contrib.auth.models import User
 from django.db import models
-from rest_framework import serializers
 from django.forms import ModelForm
+from rest_framework import serializers
+#from django import forms
+
+
 
 # Create your models here.
 
@@ -22,6 +29,7 @@ class Usuario(models.Model):
     ciudad = models.CharField(max_length=30,blank=True)
     email = models.CharField(max_length=204, blank=True)
     username = models.CharField(max_length=30, blank=True)
+    password = models.CharField(max_length=30,blank=False)
 
     def __unicode__(self):
         return self.nombre
@@ -37,7 +45,8 @@ class Media(models.Model):
     pais = models.CharField(max_length=30, blank=True)
     categoria = models.ForeignKey(Categoria, null=True)
     tipo = models.CharField(max_length=30, blank=True)
-    usuario = models.ForeignKey(Usuario, null=True)
+    user=models.ForeignKey(User,null=True)
+    # usuario = models.ForeignKey(Usuario, null=True)
 
     def __unicode__(self):
         return self.titulo
@@ -85,3 +94,45 @@ class MediaSerializer(serializers.ModelSerializer):
         model = Media
         fields = ('url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'tipo', 'usuario')
 
+
+class ClipSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Clip
+        depth = 1
+        fields = "__all__"
+
+
+class UserForm(ModelForm):
+    username = forms.CharField(max_length=50)
+    first_name=forms.CharField(max_length=20)
+    last_name=forms.CharField(max_length=20)
+    email=forms.EmailField()
+    password=forms.CharField(widget=forms.PasswordInput())
+    password2 = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model=User
+        fields=('username','first_name','last_name','email','password','password2')
+
+    def clean_username(self):
+        """Comprueba que no exista un username igual en la Base de Datos"""
+        username = self.cleaned_data['username']
+        if User.objects.filter(username=username):
+            raise forms.ValidationError('Nombre de usuario ya registrado.')
+        return username
+
+    def clean_email(self):
+        """Comprueba que no exista un email igual en la Base de Datos"""
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email):
+            raise forms.ValidationError('Ya existe un email igual registado.')
+        return email
+
+    def clean_password2(self):
+        """Comprueba que password y password2 segan iguales"""
+        password=self.cleaned_data['password']
+        password2=self.cleaned_data['password2']
+        if password != password2:
+            raise forms.ValidationError ('Las Claves no coinciden.')
+        return password2
