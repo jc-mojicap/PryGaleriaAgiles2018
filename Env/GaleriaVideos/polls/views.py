@@ -60,18 +60,19 @@ def registrar_usuario(request):
             user_app = Usuario(picture=form_data.get('picture'),
                                country=form_data.get('country'),
                                city=form_data.get('city'),
-                               auth_user=form_data.get('user_model'))
+                               auth_user=user_model)
             user_model.save()
             user_app.save()
-            return HttpResponseRedirect("polls/registrar_usuario.html")
+            return HttpResponseRedirect(reverse('media1:verMedia'))
     else:
         form = UserForm()
-        context = {"form": form}
+
+    context = {"form": form}
     return render(request, "polls/registrar_usuario.html", context)
 
 
 def modificar_usuario(request):
-    form = EditUserForm(request.POST or None)
+    form = EditUserForm(request.POST or None, instance=request.user)
     if form.is_valid():
         form_data = form.cleaned_data
         first_name = form_data.get("first_name")
@@ -88,7 +89,7 @@ def modificar_usuario(request):
     context = {
         "form": form,
     }
-    return  render(request, "polls/modificar_usuario.html", context)
+    return render(request, "polls/modificar_usuario.html", context)
 
 
 def add_user_view(request):
@@ -102,7 +103,7 @@ def add_user_view(request):
             password = cleaned_data.get ('password')
             email = cleaned_data.get('email')
 
-            user_model = User.objects.create_user(username=username,password=password)
+            user_model = User.objects.create_user(username=username, password=password)
             user_model.first_name = first_name
             user_model.last_name = last_name
             user_model.email = email
@@ -128,7 +129,7 @@ def login_view(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(username=username,password=password)
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request,user)
             # return redirect(reverse('media1:index'))
