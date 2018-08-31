@@ -25,7 +25,7 @@ class Usuario(models.Model):
     auth_user = models.ForeignKey(User, null=False)
 
     def __unicode__(self):
-        return self.name
+        return self.auth_user.username
 
 
 class Media(models.Model):
