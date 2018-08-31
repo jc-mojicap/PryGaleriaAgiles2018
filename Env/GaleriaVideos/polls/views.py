@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Media, UserForm
+from .models import Media, UserForm, EditUserForm
 from .models import Usuario
 from .models import Clip, ClipSerializer
 from django.shortcuts import render, redirect
@@ -71,7 +71,7 @@ def registrar_usuario(request):
 
 
 def modificar_usuario(request):
-    form = UserForm(request.POST or None)
+    form = EditUserForm(request.POST or None)
     if form.is_valid():
         form_data = form.cleaned_data
         first_name = form_data.get("first_name")

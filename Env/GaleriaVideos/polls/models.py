@@ -129,3 +129,22 @@ class UserForm(ModelForm):
         if password != password2:
             raise forms.ValidationError ('Las Claves no coinciden.')
         return password2
+
+
+class EditUserForm(ModelForm):
+    username = forms.CharField(max_length=50)
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
+    email = forms.EmailField()
+
+    class Meta:
+        model = Usuario
+        fields = ('username', 'first_name', 'last_name', 'email', 'picture', 'country', 'city')
+
+    def clean_email(self):
+        """Comprueba que no exista un email igual en la Base de Datos"""
+        email = self.cleaned_data['email']
+        if User.objects.filter(email=email):
+            raise forms.ValidationError('Ya existe un email igual registado.')
+        return email
+
