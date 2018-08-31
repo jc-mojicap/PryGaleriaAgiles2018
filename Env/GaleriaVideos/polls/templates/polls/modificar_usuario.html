@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+{% load bootstrap3 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 {% load staticfiles %}
 <html lang="en">
 <head>
@@ -37,13 +40,21 @@
     </div>
 </nav>
 
-<div class="border border-light text-center">
-    <form method="POST" action="">{% csrf_token%}
-         <div class="form-group">
-            {{form.as_p}}
-                <input  class="btn btn-primary" type="submit" value="Modificar Usuario"/>
+<div class="row">
+    <div class="col-md-6 col-sm-offset-3">
+        <div class="page-header">
+            <h2>Edit Profile</h2>
         </div>
-    </form>
+        <form method="post" action ="">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% buttons %}
+        <input type="submit" value="Actualizar" class="btn btn-primary"/>
+        <a href="{% url 'media1:verMedia' %}" class="btn btn-primary">Cancelar</a>
+        <a href="{% url 'media1:updatePassword' %}" class="btn btn-primary">Cambiar clave</a>
+        {% endbuttons %}
+        </form>
+    </div>
 </div>
 
 </body>

@@ -5,12 +5,10 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.forms import ModelForm
 from rest_framework import serializers
-#from django import forms
-
+# from django import forms
 
 
 # Create your models here.
-
 
 class Categoria(models.Model):
     id_categoria = models.AutoField(primary_key=True)
@@ -21,18 +19,13 @@ class Categoria(models.Model):
 
 
 class Usuario(models.Model):
-    id_usuario = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=30, blank=True)
-    apellido = models.CharField(max_length=30, blank=True)
-    foto = models.CharField(max_length=1000,blank=True)
-    pais = models.CharField(max_length=30, blank=True)
-    ciudad = models.CharField(max_length=30,blank=True)
-    email = models.CharField(max_length=204, blank=True)
-    username = models.CharField(max_length=30, blank=True)
-    password = models.CharField(max_length=30,blank=False)
+    picture = models.ImageField(upload_to="images")
+    country = models.CharField(max_length=30, blank=True)
+    city = models.CharField(max_length=30, blank=True)
+    auth_user = models.ForeignKey(User, null=False)
 
     def __unicode__(self):
-        return self.nombre
+        return self.name
 
 
 class Media(models.Model):
@@ -45,7 +38,7 @@ class Media(models.Model):
     pais = models.CharField(max_length=30, blank=True)
     categoria = models.ForeignKey(Categoria, null=True)
     tipo = models.CharField(max_length=30, blank=True)
-    user=models.ForeignKey(User,null=True)
+    user = models.ForeignKey(User,null=True)
     # usuario = models.ForeignKey(Usuario, null=True)
 
     def __unicode__(self):
@@ -79,20 +72,20 @@ class CategoriaSerializer(serializers.ModelSerializer):
         fields = ('nombre')
 
 
-class UsuarioSerializer(serializers.ModelSerializer):
+# class UsuarioSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = Usuario
+#         fields = ('nombre', 'apellido', 'foto', 'pais', 'ciudad', 'email', 'username')
 
-    class Meta:
-        model = Usuario
-        fields = ('nombre', 'apellido', 'foto', 'pais', 'ciudad', 'email', 'username')
 
-
-class MediaSerializer(serializers.ModelSerializer):
-    owner = UsuarioSerializer(read_only=True)
-    ownerId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Usuario.objects.all(), source='usuario')
-
-    class Meta:
-        model = Media
-        fields = ('url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'tipo', 'usuario')
+# class MediaSerializer(serializers.ModelSerializer):
+#     owner = UsuarioSerializer(read_only=True)
+#     ownerId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Usuario.objects.all(), source='usuario')
+#
+#     class Meta:
+#         model = Media
+#         fields = ('url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'tipo', 'usuario')
 
 
 class ClipSerializer(serializers.ModelSerializer):
@@ -105,15 +98,15 @@ class ClipSerializer(serializers.ModelSerializer):
 
 class UserForm(ModelForm):
     username = forms.CharField(max_length=50)
-    first_name=forms.CharField(max_length=20)
-    last_name=forms.CharField(max_length=20)
-    email=forms.EmailField()
-    password=forms.CharField(widget=forms.PasswordInput())
+    first_name = forms.CharField(max_length=20)
+    last_name = forms.CharField(max_length=20)
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput())
     password2 = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
-        model=User
-        fields=('username','first_name','last_name','email','password','password2')
+        model = Usuario
+        fields = ('picture', 'country', 'city')
 
     def clean_username(self):
         """Comprueba que no exista un username igual en la Base de Datos"""

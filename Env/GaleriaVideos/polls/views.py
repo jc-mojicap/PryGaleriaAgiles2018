@@ -1,15 +1,15 @@
 from __future__ import unicode_literals
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, authenticate, logout, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core import serializers
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 from .models import Media, UserForm
 from .models import Usuario
-from .models import UsuarioSerializer, Clip, ClipSerializer
+from .models import Clip, ClipSerializer
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, request
-from .forms import UsuarioForm
 import json
 
 
@@ -42,69 +42,81 @@ def ver_detalle(request):
 
 
 def registrar_usuario(request):
-    form = UsuarioForm(request.POST or None)
-    if form.is_valid():
-        form_data = form.cleaned_data
-        nombre = form_data.get("nombre")
-        apellido = form_data.get("apellido")
-        foto = form_data.get("foto")
-        pais = form_data.get("pais")
-        ciudad = form_data.get("ciudad")
-        email = form_data.get("email")
-        username = form_data.get("username")
-        password = form_data.get("password")
-        obj = Usuario.objects.create(nombre=nombre, apellido = apellido, foto = foto, pais =pais,ciudad=ciudad,email=email,username=username,password=password)
+    if request.method == 'POST':
+        form = UserForm(request.POST, request.FILES)
+        if form.is_valid():
+            form_data = form.cleaned_data
+            username = form_data.get("username")
+            first_name = form_data.get("first_name")
+            last_name = form_data.get("last_name")
+            email = form_data.get("email")
+            password = form_data.get("password")
 
-    context = {
-        "form": form,
-    }
-    return  render(request,"polls/registrar_usuario.html",context)
+            user_model = User.objects.create_user(username=username, password=password)
+            user_model.first_name = first_name
+            user_model.last_name = last_name
+            user_model.email = email
+
+            user_app = Usuario(picture=form_data.get('picture'),
+                               country=form_data.get('country'),
+                               city=form_data.get('city'),
+                               auth_user=form_data.get('user_model'))
+            user_model.save()
+            user_app.save()
+            return HttpResponseRedirect("polls/registrar_usuario.html")
+    else:
+        form = UserForm()
+        context = {"form": form}
+    return render(request, "polls/registrar_usuario.html", context)
+
 
 def modificar_usuario(request):
-    form = UsuarioForm(request.POST or None)
+    form = UserForm(request.POST or None)
     if form.is_valid():
         form_data = form.cleaned_data
-        nombre = form_data.get("nombre")
-        apellido = form_data.get("apellido")
-        foto = form_data.get("foto")
-        pais = form_data.get("pais")
-        ciudad = form_data.get("ciudad")
+        first_name = form_data.get("first_name")
+        last_name = form_data.get("last_name")
+        picture = form_data.get("picture")
+        country = form_data.get("country")
+        city = form_data.get("city")
         email = form_data.get("email")
         username = form_data.get("username")
         password = form_data.get("password")
 
-        obj = Usuario.objects.create(nombre=nombre, apellido = apellido, foto = foto, pais =pais,ciudad=ciudad,email=email,username=username,password=password)
+        obj = Usuario.objects.create(first_name=first_name, last_name=last_name, picture=picture, country=country,
+                                     city=city, email=email, username=username, password=password)
     context = {
         "form": form,
     }
-    return  render(request,"polls/modificar_usuario.html",context)
+    return  render(request, "polls/modificar_usuario.html", context)
 
 
 def add_user_view(request):
     if request.method == 'POST' :
-        form=UserForm(request.POST)
+        form = UserForm(request.POST)
         if form.is_valid():
-            cleaned_data=form.cleaned_data
-            username=cleaned_data.get('username')
-            first_name=cleaned_data.get('first_name')
-            last_name=cleaned_data.get('last_name')
-            password=cleaned_data.get ('password')
-            email=cleaned_data.get('email')
+            cleaned_data = form.cleaned_data
+            username = cleaned_data.get('username')
+            first_name = cleaned_data.get('first_name')
+            last_name = cleaned_data.get('last_name')
+            password = cleaned_data.get ('password')
+            email = cleaned_data.get('email')
 
-            user_model=User.objects.create_user(username=username,password=password)
-            user_model.first_name=first_name
-            user_model.last_name=last_name
-            user_model.email=email
+            user_model = User.objects.create_user(username=username,password=password)
+            user_model.first_name = first_name
+            user_model.last_name = last_name
+            user_model.email = email
             user_model.save()
 
             # return HttpResponseRedirect(reverse('media1:index'))
             return render(request, "polls/index.html")
     else:
-        form=UserForm()
+        form = UserForm()
     context = {
-        "form":form
+        "form": form
     }
-    return render(request,'polls/Registro.html',context)
+    return render(request, 'polls/Registro.html', context)
+
 
 def login_view(request):
 
@@ -112,7 +124,7 @@ def login_view(request):
         # return redirect(reverse('media1:index'))
         return render(request, "polls/index.html")
 
-    mensaje=''
+    mensaje = ''
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -122,10 +134,27 @@ def login_view(request):
             # return redirect(reverse('media1:index'))
             return render(request, "polls/index.html")
         else:
-            mensaje='nombre de usuario o clave no valido'
+            mensaje = 'Credenciales de acceso incorrectas'
 
-    return render(request, 'polls/login.html',{'mensaje':mensaje})
+    return render(request, 'polls/login.html', {'mensaje': mensaje})
+
 
 def logout_view(request):
     logout(request)
     return render(request, "polls/index.html")
+
+
+def update_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(data=request.POST, user=request.user)
+
+        if form.is_valid():
+            form.save()
+            update_session_auth_hash(request, user=form.user)
+            return HttpResponseRedirect(reverse('media1:index'))
+    else:
+        form = PasswordChangeForm(user=request.user)
+    context = {
+        'form': form
+    }
+    return render(request, 'polls/updatePassword.html', context)
