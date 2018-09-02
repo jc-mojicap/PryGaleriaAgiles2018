@@ -13,14 +13,14 @@ Para este proyecto se usaron las siguientes tecnologias.
 * Django ver. 1.11.15
 * PostgreSQL
 
-Nota: Al clonar el proyecto no olvidar correr el siguiente comando para instalar todas las depedencias.
+- Nota: Al clonar el proyecto no olvidar correr el siguiente comando para instalar todas las depedencias.
 ```
 pip install -r requirements.txt
 ```
-Nota2: El archivo settings no esta incluido en el repositorio para que cada persona pueda manejarlas como desee.
-Nota3: En caso de no tener la base de datos se debe crear y suministrar las credenciales apropiadas en el archivo settings. 
-Nota4: Eventualmente añadire un archivo settings de ejemplo ...
-Nota5: Las 2 ultimas lineas de settings son requeridas para el despliegue en Heroku y deben permanecer comentadas si se trabaja localmente. 
+- Nota2: El archivo settings no esta incluido en el repositorio para que cada persona pueda manejarlas como desee.
+- Nota3: En caso de no tener la base de datos se debe crear y suministrar las credenciales apropiadas en el archivo settings. 
+- Nota4: Eventualmente añadire un archivo settings de ejemplo ...
+- Nota5: Las 2 ultimas lineas de settings son requeridas para el despliegue en Heroku y deben permanecer comentadas si se trabaja localmente. 
 
 ### Instalación y despliegue
 
