@@ -47,11 +47,11 @@ python manage.py runserver
 
 ## Problemas comúnes
 
-* **Problemas con las migraciones:** La mejor alternativa es eliminar la base de datos en postgres, truncar la tabla django_migrations, eliminar el archivo 0001_initial.py de la carpeta migrations y ejecutar nuevamente los comandos de la seccion instalacion.
+* **Problemas con las migraciones:** La mejor alternativa es eliminar la base de datos en postgres, truncar la tabla django_migrations, eliminar el archivo 0001_initial.py de la carpeta migrations y ejecutar nuevamente los comandos de la seccion instalacion. (Tambien es posible eliminar toda la base de datos y ejecutar los pasos)
 
 * **Problemas para acceder al administrador:** es importante asegurarse que se cuenta con un superusuario para acceder al administrador. Esto se puede lograr con el comando 
 ```
-manage.py createsuperuser
+python manage.py createsuperuser
 ```
 * **No se muestran los videos en el index:** No olvidar que Tipo corresponde unicamente a "VIDEO" o "AUDIO" mientras que categoría puede ser cualquier valor (ej. romantico, comedia, tutorial, etc) 
 
