@@ -11,7 +11,7 @@ from .models import Clip, ClipSerializer
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, request
 import json
-
+from datetime import datetime
 
 # API
 @csrf_exempt
@@ -31,6 +31,21 @@ def detalle_clips(request, media_id):
     serializer = ClipSerializer(lista_clips, many=True)
     return HttpResponse(json.dumps(serializer.data), content_type='application/json')
 
+@csrf_exempt
+def create_clip(request, media_id):
+    if request.method == "POST":
+        clip = json.loads(request.body)
+        seg_ini = clip.get("seg_ini")
+        seg_fin = clip.get("seg_fin")
+        new_clip = Clip(
+            nombre = clip.get("nombre"),
+            seg_ini = datetime.strptime(seg_ini,"%H:%M:%S").time(),
+            seg_fin = datetime.strptime(seg_fin,"%H:%M:%S").time(),
+            usuario = User.objects.get(username=request.user),
+            media = Media.objects.get(pk=media_id)
+        )
+        new_clip.save()
+        return HttpResponse(serializers.serialize("json", [new_clip]))
 
 # Views
 def ver_media(request):

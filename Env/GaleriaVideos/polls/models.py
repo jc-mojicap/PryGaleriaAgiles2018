@@ -50,7 +50,7 @@ class Clip(models.Model):
     nombre = models.CharField(max_length=30, blank=True)
     seg_ini = models.TimeField()
     seg_fin = models.TimeField()
-    usuario = models.ForeignKey(Usuario, null=True)
+    usuario = models.ForeignKey(User, null=True)
     media = models.ForeignKey(Media, null=True)
 
     def __unicode__(self):

@@ -32,33 +32,17 @@
         }
 
         (function(){
-            // $.getJSON("http://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
             $.getJSON('/polls/detalle/'+obtenerValorParametro("id")).done(function (data) {
                 $.each(data, function (i, item) {
-                    if(item.fields.tipo.toUpperCase() == "AUDIO"){
-                        $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                            '<iframe class="embed-responsive-item" scrolling="no"   frameborder="no" ' +
-                            'src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+ item.fields.url +
-                            '&color=%23ff5500&visual=true&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&controls=0" ></iframe>');
-                    }
-                    else if(item.fields.tipo.toUpperCase() == "VIDEO"){
-                        $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                            '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' +
-                            item.fields.url + '?controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
-                    }
-                    else {
-
-                    }
+                    $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
+                        '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' +
+                        item.fields.url + '?controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
                     $("#descr").prepend('<p>' + '<b>Usuario:</b>  ' + item.fields['user'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Ciudad:</b>  ' + item.fields['ciudad'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Pais:</b>  ' + item.fields['pais'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Fecha Creación:</b>  ' + item.fields['fecha_creacion'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Autor:</b>  ' + item.fields['autor'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Titulo:</b> ' + item.fields['titulo'] +'</p>');
-                    // $.each(item.fields, function (i, item) {
-                    //     $("#descr").prepend('<p>' + item['url'] +'</p>');
-                    // });
-                    // $("#descr").prepend('<div><p>' + item.fields + ':'  + item.fields.url + '</p></div>');
                 });
             });
         })();
@@ -87,15 +71,8 @@
             let url = clip.media.url;
             let start = getSeconds(clip.seg_ini);
             let end = getSeconds(clip.seg_fin);
-            if(tipo.toUpperCase() === "AUDIO") {
-                $("#media").html('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                    '<iframe class="embed-responsive-item" scrolling="no"   frameborder="no" ' +
-                    'src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+ url +
-                    '&color=%23ff5500&visual=true&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&controls=0" ></iframe>');
-            } else {
-                $("#media").html('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                    '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' + url + '?controls=1&start=' + start + '&end=' + end + '&autoplay=1" frameborder="0" allow="autoplay"; encrypted-media" allowfullscreen></iframe></div>');
-            }
+            $("#media").html('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
+                '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' + url + '?controls=1&start=' + start + '&end=' + end + '&autoplay=1" frameborder="0" allow="autoplay"; encrypted-media" allowfullscreen></iframe></div>');
         }
 
         function getSeconds(time) {
@@ -107,7 +84,46 @@
         }
 
         function addClip() {
+            let nombre = $("#form_nombre").val();
+            let seg_ini = $("#form_seg_ini").val();
+            let seg_fin = $("#form_seg_fin").val();
+            if(nombre.trim() === "" || seg_ini.trim() === "" || seg_fin.trim() === "") {
+                showAddClipError("Por favor llene todos los campos");
+                return false;
+            }
+
+            let seg_ini_parts = seg_ini.trim().split(":");
+            let seg_fin_parts = seg_fin.trim().split(":");
+            if(seg_ini_parts.length === 2) {
+                seg_ini += ":00";
+            }
+
+            if(seg_fin_parts.length === 2) {
+                seg_fin += ":00";
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '/polls/detalle/'+obtenerValorParametro("id")+"/clips/new",
+                data: JSON.stringify({
+                    nombre: nombre,
+                    seg_ini: seg_ini,
+                    seg_fin: seg_fin
+                }),
+                contentType: "application/json; charset=UTF-8",
+                dataType: "json",
+                success: function (data) {
+                    window.location.reload();
+                },
+                failure: function (errMsg) {
+                    showAddClipError("Hubo un error.");
+                }
+            });
             return false;
+        }
+
+        function showAddClipError(message) {
+            $("#add_clip_error").text(message).css({ display: "block" });
         }
     </script>
     {% endblock %}
@@ -124,8 +140,12 @@
             <div id="clips"></div>
         </div>
     </div>
+    {% if user.is_authenticated %}
     <div class="container-fluid">
         <div class="ui-widget-content ui-corner-all col-lg-12 clip_container">
+            <div class="alert alert-danger" style="display: none;" id="add_clip_error">
+                <label id = "mensaje"></label>
+            </div>
             <h3>Agregar Clip</h3>
             <form action="" method="post" onsubmit="return addClip()">
                 <div class="form_div">
@@ -146,6 +166,7 @@
             </form>
         </div>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
 </body>
