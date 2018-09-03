@@ -1,81 +1,126 @@
-
+{% extends "polls/base.html" %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Galeria</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script>
-        (function(){
-            // $.getJSON("https://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
-            $.getJSON("/polls/media").done(function (data) {
-                $.each(data, function (i, item) {
-                    if(item.fields.tipo.toUpperCase() == "AUDIO"){
-                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
-                            '<a href="/polls/ver_detalle?id=' + item.pk + '">' +
-                            '<iframe width="300" height="200" scrolling="no" frameborder="0" ' +
-                            'src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+ item.fields.url +
-                            '&color=%23ff5500&visual=true&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&controls=0" ></iframe></a>' +
-                            '<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">'+ item.fields.titulo +'</p></a>');
-                    }
-                    else if(item.fields.tipo.toUpperCase() == "VIDEO"){
-                        $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
-                        '<a href="/polls/ver_detalle?id=' + item.pk + '">' +
-                            '<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
-                            '<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">'+ item.fields.titulo +'</p></a>');
-                    }
-                    else {
+	<title>{% block title %}Galeria{% endblock %}</title>
+	{% block scripts %}
+	<script>
+		(function(){
+			$.getJSON("/polls/media").done(function (data) {
+				if(data.length === 0) {
+					$("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
+				} else {
+					$.each(data, function (i, item) {
+						let tipo = item.fields.tipo.toUpperCase();
+						if(tipo === "VIDEO" || tipo === "AUDIO"){
+							$("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+								'<a href="/polls/ver_detalle?id=' + item.pk + '">' +
+								'<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
+								'<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">'+ item.fields.titulo +'</p></a>');
+						}
+						else {
+							$("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
+						}
+					});
+				}
+			});
+		})();
+	</script>
 
-                    }
+	<script>
+		(function(){
+			$.getJSON("/polls/categoria").done(function (data) {
+				$.each(data, function (i, item) {
+					$("#categoria").prepend('<option value="'+item.fields.nombre+'">'+
+						item.fields.nombre.toUpperCase() + '</option>');
 
+				});
+			});
+		})();
+	</script>
 
-                });
-            });
-        })();
+	<script>
+		function enviarForm() {
 
-    </script>
+			if ($('#categoria').val() === 'Seleccionar Categoria' || $("#tipo").val() === "Tipo de media") {
+				return false;
+			}
+			// Aca borro el html
+			$("#media").html("");
+
+			// Aca lo cargo
+			$.ajax({
+				type: "POST",
+				url: "/polls/media/",
+				data: JSON.stringify({
+					categoria: $('#categoria').val(),
+					tipo: $('#tipo').val()
+				}),
+				contentType: "application/json; charset=UTF-8",
+				dataType: "json",
+				success: function (data) {
+					// Aca lo agrego nuevamente
+					$.each(data, function (i, item) {
+						let tipo = item.fields.tipo.toUpperCase();
+						if(tipo === "VIDEO" || tipo === "AUDIO"){
+							$("#media").html('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+								'<a href="/polls/ver_detalle?id=' + item.pk + '">' +
+								'<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
+								'<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">'+ item.fields.titulo +'</p></a>');
+						}
+						else {
+							$("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
+						}
+					});
+				},
+				failure: function (errMsg) {
+					alert("Hubo un error.")
+				}
+			});
+			return false;
+		}
+	</script>
+
+	{% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-target="#navbar" aria-expanded="false">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="">Galeria</a>
-
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav"></ul>
-            <ul class="nav navbar-nav navbar-right">
-                {% if user.is_authenticated %}
-                    <li><a class="glyphicon glyphicon-user" href="/polls/addUser">{{ user.username }} </a> </li>
-                    <li><a class="glyphicon glyphicon-log-out" href="{% url 'media1:logout' %}"> Logout </a> </li>
-                {% else %}
-                  <!--    <li><a href="(% url 'media1:addUser' %)"> Registro </a></li>-->
-                  <!--  <li><a class="glyphicon glyphicon-log-in" href="(% url 'media1:login' %)"> Login </a> </li>-->
-                 <li><a href="/polls/addUser"> Registro </a></li>
-                <li><a class="glyphicon glyphicon-log-in" href="/polls/login"> Login </a> </li>
-                {% endif %}
-                <!--<li id="add_image"><a href="http://localhost:9000/polls/agregarImagen">Agregar Imagen</a></li>-->
-                <!--<li id="add_user"><a href="http://localhost:9000/polls/agregarUsuario">Registro</a></li>-->
-                <!--<li id="cerrar_sesion"><a class="glyphicon glyphicon-log-out" href="#"-->
-                                          <!--id="clic_cerrar_sesion" onclick="logout();">Logout</a></li>-->
-                <!--<li id="login_user"><a class="glyphicon glyphicon-log-in"-->
-                                       <!--href="http://localhost:9000/polls/ingresar">Login</a></li>-->
-
-            </ul>
-        </div>
-    </div>
-</nav>
-<br>
-<br>
-<h1 align="center">Galeria</h1>
-    <div class="row" id="media"></div>
+	{% block content %}
+	<h1 align="center">Galeria</h1>
+	<form method="post" action="" onsubmit="return enviarForm();">
+		{% csrf_token %}
+		<div class="container">
+			<div class="row">
+				<div class="col-md">
+					<div class="col-md-2">
+						<select class="form-control" id="tipo" name="tipo">
+							<option selected>Tipo de media</option>
+							<option value="VIDEO">VIDEO</option>
+							<option value="AUDIO">AUDIO</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md">
+					<div class="col-md-3">
+						<select class="form-control" id="categoria" name="categoria">
+							<option selected>Seleccionar Categoria</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md">
+					<div class="col-xs-2">
+						<input type="search" name="q" placeholder="Buscar" class="form-control" id="ex1" type="text">
+					</div>
+				</div>
+                <div class="col-md">
+					<div class="col-xs-2">
+						<button type="submit" class="btn btn-default">Buscar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<br>
+	<div class="row" id="media" style="padding-left:30px"></div>
+	{% endblock %}
 </body>
 </html>

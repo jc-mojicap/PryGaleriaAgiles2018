@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Galería multimedia{% endblock %}</title>
+    <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+
+<!-- Then include bootstrap js -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        body {
+           padding-top: 30px;
+        }
+    </style>
+
+
+
+    {% block scripts %}
+    {% endblock %}
+</head>
+<body>
+    {% block header %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li>
+                        <a class="navbar-brand" href="{% url 'media1:verMedia' %}">Galeria</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+					<li>
+                        <a href="{% url 'media1:modificarUsuario' %}" id="dropdownMenu1" data-toggle="dropdown"><span class="glyphicon glyphicon-user"></span> {{ user.username }}</a>
+                          <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="{% url 'media1:modificarUsuario' %}"><span class="glyphicon glyphicon-pencil"></span> Editar</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="{% url 'media1:logout' %}"><span class="glyphicon glyphicon-log-out"></span> Cerrar sesión</a></li>
+                          </ul>
+                    </li>
+                    {% else %}
+                    <li> <a href="{% url 'media1:registrarUsuario' %}"><span class="glyphicon glyphicon-plus"></span> Registrar Usuario</a></li>
+                    <li> <a href="{% url 'media1:login' %}"><span class="glyphicon glyphicon-log-in"></span> Iniciar sesion</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% endblock %}
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

@@ -1,14 +1,11 @@
+{% extends "polls/base.html" %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <title>{% block title %}Detalles{% endblock %}</title>
+    {% block scripts %}
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Detalles</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="/resources/demos/style.css">
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 
     <style>
         .play_clip_btn {
@@ -35,33 +32,17 @@
         }
 
         (function(){
-            // $.getJSON("http://agilesgaleriagrupo4.herokuapp.com/polls/media").done(function (data) {
             $.getJSON('/polls/detalle/'+obtenerValorParametro("id")).done(function (data) {
                 $.each(data, function (i, item) {
-                    if(item.fields.tipo.toUpperCase() == "AUDIO"){
-                        $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                            '<iframe class="embed-responsive-item" scrolling="no"   frameborder="no" ' +
-                            'src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+ item.fields.url +
-                            '&color=%23ff5500&visual=true&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&controls=0" ></iframe>');
-                    }
-                    else if(item.fields.tipo.toUpperCase() == "VIDEO"){
-                        $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                            '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' +
-                            item.fields.url + '?controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
-                    }
-                    else {
-
-                    }
+                    $("#media").prepend('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
+                        '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' +
+                        item.fields.url + '?controls=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe></div>');
                     $("#descr").prepend('<p>' + '<b>Usuario:</b>  ' + item.fields['user'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Ciudad:</b>  ' + item.fields['ciudad'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Pais:</b>  ' + item.fields['pais'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Fecha Creación:</b>  ' + item.fields['fecha_creacion'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Autor:</b>  ' + item.fields['autor'] +'</p>');
                     $("#descr").prepend('<p>' + '<b>Titulo:</b> ' + item.fields['titulo'] +'</p>');
-                    // $.each(item.fields, function (i, item) {
-                    //     $("#descr").prepend('<p>' + item['url'] +'</p>');
-                    // });
-                    // $("#descr").prepend('<div><p>' + item.fields + ':'  + item.fields.url + '</p></div>');
                 });
             });
         })();
@@ -90,15 +71,8 @@
             let url = clip.media.url;
             let start = getSeconds(clip.seg_ini);
             let end = getSeconds(clip.seg_fin);
-            if(tipo.toUpperCase() === "AUDIO") {
-                $("#media").html('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                    '<iframe class="embed-responsive-item" scrolling="no"   frameborder="no" ' +
-                    'src="https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/'+ url +
-                    '&color=%23ff5500&visual=true&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&show_teaser=false&visual=true&controls=0" ></iframe>');
-            } else {
-                $("#media").html('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
-                    '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' + url + '?controls=1&start=' + start + '&end=' + end + '&autoplay=1" frameborder="0" allow="autoplay"; encrypted-media" allowfullscreen></iframe></div>');
-            }
+            $("#media").html('<div class="embed-responsive embed-responsive-16by9 hoverable">' +
+                '<iframe class="embed-responsive-item" src="https://www.youtube.com/embed/' + url + '?controls=1&start=' + start + '&end=' + end + '&autoplay=1" frameborder="0" allow="autoplay"; encrypted-media" allowfullscreen></iframe></div>');
         }
 
         function getSeconds(time) {
@@ -110,37 +84,52 @@
         }
 
         function addClip() {
+            let nombre = $("#form_nombre").val();
+            let seg_ini = $("#form_seg_ini").val();
+            let seg_fin = $("#form_seg_fin").val();
+            if(nombre.trim() === "" || seg_ini.trim() === "" || seg_fin.trim() === "") {
+                showAddClipError("Por favor llene todos los campos");
+                return false;
+            }
+
+            let seg_ini_parts = seg_ini.trim().split(":");
+            let seg_fin_parts = seg_fin.trim().split(":");
+            if(seg_ini_parts.length === 2) {
+                seg_ini += ":00";
+            }
+
+            if(seg_fin_parts.length === 2) {
+                seg_fin += ":00";
+            }
+
+            $.ajax({
+                type: "POST",
+                url: '/polls/detalle/'+obtenerValorParametro("id")+"/clips/new",
+                data: JSON.stringify({
+                    nombre: nombre,
+                    seg_ini: seg_ini,
+                    seg_fin: seg_fin
+                }),
+                contentType: "application/json; charset=UTF-8",
+                dataType: "json",
+                success: function (data) {
+                    window.location.reload();
+                },
+                failure: function (errMsg) {
+                    showAddClipError("Hubo un error.");
+                }
+            });
             return false;
         }
+
+        function showAddClipError(message) {
+            $("#add_clip_error").text(message).css({ display: "block" });
+        }
     </script>
+    {% endblock %}
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-target="#navbar" aria-expanded="false">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/polls/">Galeria</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-            <ul class="nav navbar-nav"></ul>
-            <ul class="nav navbar-nav navbar-right">
-                <!--<li id="add_image"><a href="http://localhost:9000/polls/agregarImagen">Agregar Imagen</a></li>-->
-                <!--<li id="add_user"><a href="http://localhost:9000/polls/agregarUsuario">Registro</a></li>-->
-                <!--<li id="cerrar_sesion"><a class="glyphicon glyphicon-log-out" href="#"-->
-                <!--id="clic_cerrar_sesion" onclick="logout();">Logout</a></li>-->
-                <!--<li id="login_user"><a class="glyphicon glyphicon-log-in"-->
-                <!--href="http://localhost:9000/polls/ingresar">Login</a></li>-->
-            </ul>
-        </div>
-    </div>
-</nav>
-<br>
-<br>
+{% block content %}
 <h1 align="center">Detalle Galeria</h1>
 <div class="col-md-6" id="media"></div>
 <div class="col-md-6" id="descr"></div>
@@ -151,9 +140,14 @@
             <div id="clips"></div>
         </div>
     </div>
+    {% if user.is_authenticated %}
     <div class="container-fluid">
         <div class="ui-widget-content ui-corner-all col-lg-12 clip_container">
+            <div class="alert alert-danger" style="display: none;" id="add_clip_error">
+                <label id = "mensaje"></label>
+            </div>
             <h3>Agregar Clip</h3>
+            <p>Ej: 12:05:23 a.m es equivalente al minuto 05:23 del video (el input time no se renderiza igual en todos los navegadores)</p>
             <form action="" method="post" onsubmit="return addClip()">
                 <div class="form_div">
                     <label for="form_nombre">Nombre</label>
@@ -167,12 +161,14 @@
                     <label for="form_seg_fin">Seg Fin</label>
                     <input type="time" step="1" name="form_seg_fin" id="form_seg_fin">
                 </div>
-                <button type="submit" class="btn btn-default pull-right">
+                <button type="submit" class="btn btn-default">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
             </form>
         </div>
     </div>
+    {% endif %}
 </div>
+{% endblock %}
 </body>
 </html>
