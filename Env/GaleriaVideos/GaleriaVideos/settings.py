@@ -78,7 +78,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': "galeria_videos",
-        'USER': "Willy",
+        'USER': "postgres",
         "PASSWORD": "",
         "HOST": "127.0.0.1",
         "PORT": "5432"
@@ -127,5 +127,5 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'media'),
 )
 
-import dj_database_url
-DATABASES['default'] = dj_database_url.config()
+# import dj_database_url
+# DATABASES['default'] = dj_database_url.config()

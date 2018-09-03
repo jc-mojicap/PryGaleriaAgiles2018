@@ -5,19 +5,35 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Media, UserForm, EditUserForm
+from .models import Media, UserForm, EditUserForm, CategoriaSerializer, Categoria
 from .models import Usuario
 from .models import Clip, ClipSerializer
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, request
+from django.http import HttpResponse, HttpResponseRedirect, request, HttpResponseBadRequest
 import json
+import re
+
 
 
 # API
 @csrf_exempt
 def index(request):
     lista_media = Media.objects.all()
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            fcategoria = cleaned_data.get('categoria')
+            ftipo = cleaned_data.get('tipo')
+            categoria = Categoria.objects.filter(nombre=fcategoria)
+            lista_media = Media.objects.filter(categoria=categoria)
+
     return HttpResponse(serializers.serialize("json", lista_media))
+
+@csrf_exempt
+def categoria(request):
+    lista_categoria = Categoria.objects.all()
+    return HttpResponse(serializers.serialize("json", lista_categoria))
 
 
 @csrf_exempt

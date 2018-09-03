@@ -18,11 +18,19 @@ class Categoria(models.Model):
         return self.nombre
 
 
+class Tipo(models.Model):
+    tipo = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=30, blank=True)
+
+    def __unicode__(self):
+        return self.nombre
+
+
 class Usuario(models.Model):
     picture = models.ImageField(upload_to="images")
     country = models.CharField(max_length=30, blank=True)
     city = models.CharField(max_length=30, blank=True)
-    auth_user = models.ForeignKey(User, null=False)
+    auth_user = models.ForeignKey(User, on_delete=models.PROTECT,null=True)
 
     def __unicode__(self):
         return self.auth_user.username
@@ -36,9 +44,10 @@ class Media(models.Model):
     fecha_creacion = models.DateField()
     ciudad = models.CharField(max_length=30, blank=True)
     pais = models.CharField(max_length=30, blank=True)
-    categoria = models.ForeignKey(Categoria, null=True)
+    categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT,null=True)
     tipo = models.CharField(max_length=30, blank=True)
-    user = models.ForeignKey(User,null=True)
+    # tipo = models.ForeignKey(Tipo,on_delete=models.PROTECT,null=True)
+    user = models.ForeignKey(User,on_delete=models.PROTECT,null=True)
     # usuario = models.ForeignKey(Usuario, null=True)
 
     def __unicode__(self):
@@ -50,16 +59,16 @@ class Clip(models.Model):
     nombre = models.CharField(max_length=30, blank=True)
     seg_ini = models.TimeField()
     seg_fin = models.TimeField()
-    usuario = models.ForeignKey(Usuario, null=True)
-    media = models.ForeignKey(Media, null=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.PROTECT,null=True)
+    media = models.ForeignKey(Media, on_delete=models.PROTECT,null=True)
 
     def __unicode__(self):
         return self.nombre
 
 
 class Favorito(models.Model):
-    id_categoria = models.ForeignKey(Categoria, null=True)
-    id_usuario = models.ForeignKey(Usuario, null=True)
+    id_categoria = models.ForeignKey(Categoria, on_delete=models.PROTECT,null=True)
+    id_usuario = models.ForeignKey(Usuario, on_delete=models.PROTECT,null=True)
 
     def __unicode__(self):
         return self.id_categoria
@@ -70,6 +79,13 @@ class CategoriaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Categoria
         fields = ('nombre')
+
+class TipoSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Tipo
+        depth = 1
+        fields = "__all__"
 
 
 # class UsuarioSerializer(serializers.ModelSerializer):
