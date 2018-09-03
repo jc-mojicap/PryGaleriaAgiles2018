@@ -22,7 +22,7 @@ def index(request):
         fcategoria = jsonFilter['categoria']
         ftipo = jsonFilter['tipo']
         categoria = Categoria.objects.filter(nombre=fcategoria)
-        lista_media = Media.objects.filter(categoria=categoria)
+        lista_media = Media.objects.filter(categoria=categoria, tipo=ftipo)
     return HttpResponse(serializers.serialize("json", lista_media))
 
 @csrf_exempt

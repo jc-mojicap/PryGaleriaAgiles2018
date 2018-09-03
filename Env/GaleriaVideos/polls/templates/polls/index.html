@@ -42,7 +42,7 @@
     <script>
         function enviarForm() {
 
-            if ($('#categoria').val() === 'Seleccionar Categoria') {
+            if ($('#categoria').val() === 'Seleccionar Categoria' || $("#tipo").val() === "Tipo de media") {
                 return false;
             }
             // Aca borro el html
@@ -101,7 +101,7 @@
         <select name="categoria" id="categoria">
             <option selected>Seleccionar Categoria</option>
         </select>
-        <input type="search" name="q" placeholder="Buscar"/>
+        <input type="search" name="q" placeholder="Buscar" style="display:none;"/>
         <button type="submit" class="btn btn-default">Buscar</button>
     </form>
 </li>
