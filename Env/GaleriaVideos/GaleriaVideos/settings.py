@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-
+import dj_database_url
+from django.core.urlresolvers import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -76,12 +77,12 @@ WSGI_APPLICATION = 'GaleriaVideos.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': "galeria_videos",
-        'USER': "Willy",
-        "PASSWORD": "",
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': "galeria",
+        'USER': "root",
+        "PASSWORD": "root",
         "HOST": "127.0.0.1",
-        "PORT": "5432"
+        "PORT": "3306"
     }
 }
 
@@ -121,11 +122,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/media/'
-STATIC_ROOT = 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'media'),
+    os.path.join(BASE_DIR, 'static'),
 )
+CORS_ORIGIN_ALLOW_ALL = True
+MEDIA_URL = '/pictures/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'pictures')
 
 # import dj_database_url
 # DATABASES['default'] = dj_database_url.config()

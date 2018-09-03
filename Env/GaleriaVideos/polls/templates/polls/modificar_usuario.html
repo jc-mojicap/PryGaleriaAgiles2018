@@ -45,9 +45,10 @@
         <div class="page-header">
             <h2>Edit Profile</h2>
         </div>
-        <form method="post" action ="">
+        <form method="post" action ="" enctype="multipart/form-data">
         {% csrf_token %}
         {% bootstrap_form form %}
+        {% bootstrap_form usuarioform %}
         {% buttons %}
         <input type="submit" value="Actualizar" class="btn btn-primary"/>
         <a href="{% url 'media1:verMedia' %}" class="btn btn-primary">Cancelar</a>

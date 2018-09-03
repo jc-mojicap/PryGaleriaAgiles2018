@@ -27,10 +27,10 @@ class Tipo(models.Model):
 
 
 class Usuario(models.Model):
-    picture = models.ImageField(upload_to="images")
+    picture = models.ImageField(upload_to="images", blank=True)
     country = models.CharField(max_length=30, blank=True)
     city = models.CharField(max_length=30, blank=True)
-    auth_user = models.ForeignKey(User, on_delete=models.PROTECT,null=True)
+    auth_user = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
 
     def __unicode__(self):
         return self.auth_user.username
@@ -100,7 +100,7 @@ class TipoSerializer(serializers.ModelSerializer):
 #     ownerId = serializers.PrimaryKeyRelatedField(write_only=True, queryset=Usuario.objects.all(), source='usuario')
 #
 #     class Meta:
-#         model = Media
+#         model = pictures
 #         fields = ('url', 'titulo', 'autor', 'fecha_creacion', 'ciudad', 'pais', 'tipo', 'usuario')
 
 
@@ -143,8 +143,19 @@ class UserForm(ModelForm):
         password=self.cleaned_data['password']
         password2=self.cleaned_data['password2']
         if password != password2:
-            raise forms.ValidationError ('Las Claves no coinciden.')
+            raise forms.ValidationError('Las Claves no coinciden.')
         return password2
+
+
+class EditUsuarioForm(ModelForm):
+    picture = models.ImageField(upload_to="images", blank=True)
+    country = models.CharField(max_length=30, blank=True)
+    city = models.CharField(max_length=30, blank=True)
+    auth_user = models.ForeignKey(User, null=False)
+
+    class Meta:
+        model = Usuario
+        fields = ('picture', 'country', 'city')
 
 
 class EditUserForm(ModelForm):
@@ -154,13 +165,20 @@ class EditUserForm(ModelForm):
     email = forms.EmailField()
 
     class Meta:
-        model = Usuario
-        fields = ('username', 'first_name', 'last_name', 'email', 'picture', 'country', 'city')
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        if not User.objects.filter(username=username):
+            raise forms.ValidationError('Nombre de usuario no existe.')
+        return username
 
     def clean_email(self):
         """Comprueba que no exista un email igual en la Base de Datos"""
-        email = self.cleaned_data['email']
-        if User.objects.filter(email=email):
-            raise forms.ValidationError('Ya existe un email igual registado.')
-        return email
-
+        username = self.cleaned_data["username"]
+        email1 = self.cleaned_data["email"]
+        users = User.objects.filter(email__iexact=email1).exclude(username__iexact=username)
+        if users:
+            raise forms.ValidationError('E-mail regitrado por otro usuario')
+        return email1.lower()

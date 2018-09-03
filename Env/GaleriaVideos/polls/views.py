@@ -5,13 +5,14 @@ from django.contrib.auth.models import User
 from django.core import serializers
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Media, UserForm, EditUserForm, CategoriaSerializer, Categoria
+from .models import Media, UserForm, EditUserForm, CategoriaSerializer, Categoria, EditUsuarioForm
 from .models import Usuario
 from .models import Clip, ClipSerializer
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, request, HttpResponseBadRequest
 import json
 from datetime import datetime
+from django.core import serializers as jsonserializer
 
 # API
 @csrf_exempt
@@ -98,22 +99,27 @@ def registrar_usuario(request):
 
 
 def modificar_usuario(request):
-    form = EditUserForm(request.POST or None, instance=request.user)
-    if form.is_valid():
-        form_data = form.cleaned_data
-        first_name = form_data.get("first_name")
-        last_name = form_data.get("last_name")
-        picture = form_data.get("picture")
-        country = form_data.get("country")
-        city = form_data.get("city")
-        email = form_data.get("email")
-        username = form_data.get("username")
-        password = form_data.get("password")
+    if request.method == 'POST':
+        form = EditUserForm(data=request.POST, instance=request.user)
+        user = User.objects.get(username=request.user.username)
+        usuario = Usuario.objects.filter(auth_user=user).first()
+        usuarioform = EditUsuarioForm(request.POST, request.FILES, instance=usuario)
 
-        obj = Usuario.objects.create(first_name=first_name, last_name=last_name, picture=picture, country=country,
-                                     city=city, email=email, username=username, password=password)
+        if form.is_valid():
+            if usuarioform.is_valid():
+                form.save()
+                usuarioform.save()
+                return HttpResponseRedirect(reverse('media1:verMedia'))
+
+    else:
+        user = User.objects.get(username=request.user.username)
+        form = EditUserForm(instance=user)
+        usuario = Usuario.objects.filter(auth_user=user).first()
+        usuarioform = EditUsuarioForm(instance=usuario)
+
     context = {
         "form": form,
+        "usuarioform": usuarioform
     }
     return render(request, "polls/modificar_usuario.html", context)
 
