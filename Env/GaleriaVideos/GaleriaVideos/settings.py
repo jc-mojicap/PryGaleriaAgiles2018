@@ -77,12 +77,12 @@ WSGI_APPLICATION = 'GaleriaVideos.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': "galeria",
-        'USER': "root",
-        "PASSWORD": "root",
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': "galeria_videos",
+        'USER': "Willy",
+        "PASSWORD": "",
         "HOST": "127.0.0.1",
-        "PORT": "3306"
+        "PORT": "5432"
     }
 }
 
