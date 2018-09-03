@@ -174,11 +174,3 @@ class EditUserForm(ModelForm):
             raise forms.ValidationError('Nombre de usuario no existe.')
         return username
 
-    def clean_email(self):
-        """Comprueba que no exista un email igual en la Base de Datos"""
-        username = self.cleaned_data["username"]
-        email1 = self.cleaned_data["email"]
-        users = User.objects.filter(email__iexact=email1).exclude(username__iexact=username)
-        if users:
-            raise forms.ValidationError('E-mail regitrado por otro usuario')
-        return email1.lower()
