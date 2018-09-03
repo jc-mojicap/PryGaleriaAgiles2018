@@ -147,6 +147,7 @@
                 <label id = "mensaje"></label>
             </div>
             <h3>Agregar Clip</h3>
+            <p>Ej: 12:05:23 a.m es equivalente al minuto 05:23 del video (el input time no se renderiza igual en todos los navegadores)</p>
             <form action="" method="post" onsubmit="return addClip()">
                 <div class="form_div">
                     <label for="form_nombre">Nombre</label>
@@ -160,7 +161,7 @@
                     <label for="form_seg_fin">Seg Fin</label>
                     <input type="time" step="1" name="form_seg_fin" id="form_seg_fin">
                 </div>
-                <button type="submit" class="btn btn-default pull-right">
+                <button type="submit" class="btn btn-default">
                     <span class="glyphicon glyphicon-plus"></span>
                 </button>
             </form>

@@ -4,7 +4,7 @@
 <head>
     <title>{% block title %}Galeria{% endblock %}</title>
     {% block scripts %}
-    <script>
+<script>
         (function(){
             $.getJSON("/polls/media").done(function (data) {
                 if(data.length === 0) {
