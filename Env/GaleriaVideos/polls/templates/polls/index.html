@@ -2,111 +2,125 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{% block title %}Galeria{% endblock %}</title>
-    {% block scripts %}
-<script>
-        (function(){
-            $.getJSON("/polls/media").done(function (data) {
-                if(data.length === 0) {
-                    $("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
-                } else {
-                    $.each(data, function (i, item) {
-                        let tipo = item.fields.tipo.toUpperCase();
-                        if(tipo === "VIDEO" || tipo === "AUDIO"){
-                            $("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
-                                '<a href="/polls/ver_detalle?id=' + item.pk + '">' +
-                                '<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
-                                '<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">'+ item.fields.titulo +'</p></a>');
-                        }
-                        else {
-                            $("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
-                        }
-                    });
-                }
-            });
-        })();
-    </script>
+	<title>{% block title %}Galeria{% endblock %}</title>
+	{% block scripts %}
+	<script>
+		(function(){
+			$.getJSON("/polls/media").done(function (data) {
+				if(data.length === 0) {
+					$("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
+				} else {
+					$.each(data, function (i, item) {
+						let tipo = item.fields.tipo.toUpperCase();
+						if(tipo === "VIDEO" || tipo === "AUDIO"){
+							$("#media").prepend('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+								'<a href="/polls/ver_detalle?id=' + item.pk + '">' +
+								'<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
+								'<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">'+ item.fields.titulo +'</p></a>');
+						}
+						else {
+							$("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
+						}
+					});
+				}
+			});
+		})();
+	</script>
 
-    <script>
-        (function(){
-            $.getJSON("/polls/categoria").done(function (data) {
-                $.each(data, function (i, item) {
-                    $("#categoria").prepend('<option value="'+item.fields.nombre+'">'+
-                        item.fields.nombre.toUpperCase() + '</option>');
+	<script>
+		(function(){
+			$.getJSON("/polls/categoria").done(function (data) {
+				$.each(data, function (i, item) {
+					$("#categoria").prepend('<option value="'+item.fields.nombre+'">'+
+						item.fields.nombre.toUpperCase() + '</option>');
 
-                });
-            });
-        })();
-    </script>
+				});
+			});
+		})();
+	</script>
 
-    <script>
-        function enviarForm() {
+	<script>
+		function enviarForm() {
 
-            if ($('#categoria').val() === 'Seleccionar Categoria' || $("#tipo").val() === "Tipo de media") {
-                return false;
-            }
-            // Aca borro el html
-            $("#media").html("");
+			if ($('#categoria').val() === 'Seleccionar Categoria' || $("#tipo").val() === "Tipo de media") {
+				return false;
+			}
+			// Aca borro el html
+			$("#media").html("");
 
-            // Aca lo cargo
-            $.ajax({
-                type: "POST",
-                url: "/polls/media/",
-                data: JSON.stringify({
-                    categoria: $('#categoria').val(),
-                    tipo: $('#tipo').val()
-                }),
-                contentType: "application/json; charset=UTF-8",
-                dataType: "json",
-                success: function (data) {
-                    // Aca lo agrego nuevamente
-                    $.each(data, function (i, item) {
-                        let tipo = item.fields.tipo.toUpperCase();
-                        if(tipo === "VIDEO" || tipo === "AUDIO"){
-                            $("#media").html('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
-                                '<a href="/polls/ver_detalle?id=' + item.pk + '">' +
-                                '<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
-                                '<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">'+ item.fields.titulo +'</p></a>');
-                        }
-                        else {
-                            $("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
-                        }
-                    });
-                },
-                failure: function (errMsg) {
-                    alert("Hubo un error.")
-                }
-            });
-            return false;
-        }
-    </script>
+			// Aca lo cargo
+			$.ajax({
+				type: "POST",
+				url: "/polls/media/",
+				data: JSON.stringify({
+					categoria: $('#categoria').val(),
+					tipo: $('#tipo').val()
+				}),
+				contentType: "application/json; charset=UTF-8",
+				dataType: "json",
+				success: function (data) {
+					// Aca lo agrego nuevamente
+					$.each(data, function (i, item) {
+						let tipo = item.fields.tipo.toUpperCase();
+						if(tipo === "VIDEO" || tipo === "AUDIO"){
+							$("#media").html('<div class="col-md-4 col-sm-6 col-lg-3 well">' +
+								'<a href="/polls/ver_detalle?id=' + item.pk + '">' +
+								'<img width="300" height="200" src="https://img.youtube.com/vi/'+ item.fields.url + '/0.jpg" ></img></a>' +
+								'<a href="/polls/ver_detalle?id=' + item.pk + '"><p class="btn-link">'+ item.fields.titulo +'</p></a>');
+						}
+						else {
+							$("#media").append('<h2 class="text-center">No hay nada para mostrar 😢 </h2>')
+						}
+					});
+				},
+				failure: function (errMsg) {
+					alert("Hubo un error.")
+				}
+			});
+			return false;
+		}
+	</script>
 
-
-
-    {% endblock %}
+	{% endblock %}
 </head>
 <body>
-{% block content %}
-<h1 align="center">Galeria</h1>
-<li>
-    <form method="post" action="" onsubmit="return enviarForm();">
-        {% csrf_token %}
-        <label>Tipo:</label>
-        <select name="tipo" id="tipo">
-            <option selected>Tipo de media</option>
-            <option value="VIDEO">VIDEO</option>
-            <option value="AUDIO">AUDIO</option>
-        </select>
-        <label>Categoría:</label>
-        <select name="categoria" id="categoria">
-            <option selected>Seleccionar Categoria</option>
-        </select>
-        <input type="search" name="q" placeholder="Buscar" style="display:none;"/>
-        <button type="submit" class="btn btn-default">Buscar</button>
-    </form>
-</li>
-
-<div class="row" id="media"></div>
-{% endblock %}
+	{% block content %}
+	<h1 align="center">Galeria</h1>
+	<form method="post" action="" onsubmit="return enviarForm();">
+		{% csrf_token %}
+		<div class="container">
+			<div class="row">
+				<div class="col-md">
+					<div class="col-md-2">
+						<select class="form-control" id="tipo" name="tipo">
+							<option selected>Tipo de media</option>
+							<option value="VIDEO">VIDEO</option>
+							<option value="AUDIO">AUDIO</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md">
+					<div class="col-md-3">
+						<select class="form-control" id="categoria" name="categoria">
+							<option selected>Seleccionar Categoria</option>
+						</select>
+					</div>
+				</div>
+				<div class="col-md">
+					<div class="col-xs-2">
+						<input type="search" name="q" placeholder="Buscar" class="form-control" id="ex1" type="text">
+					</div>
+				</div>
+                <div class="col-md">
+					<div class="col-xs-2">
+						<button type="submit" class="btn btn-default">Buscar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+	<br>
+	<div class="row" id="media" style="padding-left:30px"></div>
+	{% endblock %}
 </body>
 </html>
