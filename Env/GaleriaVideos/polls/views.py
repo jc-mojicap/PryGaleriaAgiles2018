@@ -106,24 +106,33 @@ def modificar_usuario(request):
         user = User.objects.get(username=request.user.username)
         usuario = Usuario.objects.filter(auth_user=user).first()
         usuarioform = EditUsuarioForm(request.POST, request.FILES, instance=usuario)
+        passform = PasswordChangeForm(data=request.POST, user=request.user)
 
-        if form.is_valid():
+        if passform.is_valid():
+            passform.save()
+            update_session_auth_hash(request, user=form.user)
+            return HttpResponseRedirect(reverse('media1:index'))
+
+        elif form.is_valid():
             if usuarioform.is_valid():
                 form.save()
                 usuarioform.save()
                 return HttpResponseRedirect(reverse('media1:verMedia'))
-
     else:
         user = User.objects.get(username=request.user.username)
         form = EditUserForm(instance=user)
         usuario = Usuario.objects.filter(auth_user=user).first()
         usuarioform = EditUsuarioForm(instance=usuario)
+        passform = PasswordChangeForm(user=request.user)
 
     context = {
         "form": form,
-        "usuarioform": usuarioform
+        "usuarioform": usuarioform,
+        "passform":passform
     }
     return render(request, "polls/modificar_usuario.html", context)
+
+
 
 
 def add_user_view(request):
