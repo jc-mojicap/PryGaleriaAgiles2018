@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
+from django.conf.global_settings import EMAIL_PORT, EMAIL_HOST, EMAIL_HOST_USER, EMAIL_HOST_PASSWORD, EMAIL_USE_TLS, \
+    EMAIL_USE_SSL
 from django.core.urlresolvers import reverse_lazy
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -133,3 +135,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'pictures')
 
 import dj_database_url
 DATABASES['default'] = dj_database_url.config()
+
+EMAIL_HOST = os.environ.get('smtp_host')
+EMAIL_PORT = int(os.environ.get('smtp_port'))
+EMAIL_HOST_USER = os.environ.get('smtp_user')
+EMAIL_HOST_PASSWORD = os.environ.get('smtp_password')
+EMAIL_USE_TLS = os.environ.get('smtp_use_tls')
