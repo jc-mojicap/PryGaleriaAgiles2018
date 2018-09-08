@@ -10,6 +10,7 @@ from .models import Usuario
 from .models import Clip, ClipSerializer
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, request, HttpResponseBadRequest
+from django.core.mail import send_mail
 import json
 from datetime import datetime
 from django.core import serializers as jsonserializer
@@ -50,13 +51,14 @@ def create_clip(request, media_id):
         seg_ini = clip.get("seg_ini")
         seg_fin = clip.get("seg_fin")
         new_clip = Clip(
-            nombre = clip.get("nombre"),
-            seg_ini = datetime.strptime(seg_ini,"%H:%M:%S").time(),
-            seg_fin = datetime.strptime(seg_fin,"%H:%M:%S").time(),
-            usuario = User.objects.get(username=request.user),
-            media = Media.objects.get(pk=media_id)
+            nombre=clip.get("nombre"),
+            seg_ini=datetime.strptime(seg_ini,"%H:%M:%S").time(),
+            seg_fin=datetime.strptime(seg_fin,"%H:%M:%S").time(),
+            usuario=User.objects.get(username=request.user),
+            media=Media.objects.get(pk=media_id)
         )
         new_clip.save()
+        enviar_email(media_id)
         return HttpResponse(serializers.serialize("json", [new_clip]))
 
 # Views
@@ -191,3 +193,14 @@ def update_password(request):
         'form': form
     }
     return render(request, 'polls/updatePassword.html', context)
+
+
+def enviar_email(media_id):
+    media = Media.objects.get(pk=media_id)
+    send_mail(
+        'Clip agregado',
+        'Se ha agregado un clip a: ' + media.titulo,
+        'sw.jmojica@gmail.com',
+        [media.user.email],
+        fail_silently=False,
+    )
