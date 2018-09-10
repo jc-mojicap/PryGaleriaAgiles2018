@@ -31,41 +31,12 @@
         <a href="{% url 'media1:verMedia' %}" class="btn btn-primary">Cancelar</a>
         <a href="{% url 'media1:updatePassword' %}" class="btn btn-primary">Cambiar clave</a>
 
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Cambiar contraseña modal</button>
+
         {% endbuttons %}
         </form>
     </div>
 </div>
-<!-- Button trigger modal -->
 
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 class="modal-title" id="exampleModalLabel">Cambiar Contraseña</h3>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method="post" action ="">
-        {% csrf_token %}
-            <!-- Aqui cargo el formulario deseado-->
-        {% bootstrap_form passform %}
-        {% buttons %}
-            <div class="modal-footer">
-                <input type="submit" value="Actualizar" class="btn btn-primary"/>
-                <a href="{% url 'media1:modificarUsuario' %}" class="btn btn-primary">Cancelar</a>
-                {% endbuttons %}
-            </div>
-        </form>
-      </div>
-    </div>
-    </div>
-  </div>
-</div>
 
 {% endblock %}
 

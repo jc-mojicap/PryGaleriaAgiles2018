@@ -58,6 +58,7 @@ def create_clip(request, media_id):
             media=Media.objects.get(pk=media_id)
         )
         new_clip.save()
+        #Zulma: create clip funciona en mi PC si comento esta linea
         enviar_email(media_id)
         return HttpResponse(serializers.serialize("json", [new_clip]))
 
@@ -106,14 +107,8 @@ def modificar_usuario(request):
         user = User.objects.get(username=request.user.username)
         usuario = Usuario.objects.filter(auth_user=user).first()
         usuarioform = EditUsuarioForm(request.POST, request.FILES, instance=usuario)
-        passform = PasswordChangeForm(data=request.POST, user=request.user)
 
-        if passform.is_valid():
-            passform.save()
-            update_session_auth_hash(request, user=form.user)
-            return HttpResponseRedirect(reverse('media1:index'))
-
-        elif form.is_valid():
+        if form.is_valid():
             if usuarioform.is_valid():
                 form.save()
                 usuarioform.save()
@@ -123,17 +118,12 @@ def modificar_usuario(request):
         form = EditUserForm(instance=user)
         usuario = Usuario.objects.filter(auth_user=user).first()
         usuarioform = EditUsuarioForm(instance=usuario)
-        passform = PasswordChangeForm(user=request.user)
 
     context = {
         "form": form,
-        "usuarioform": usuarioform,
-        "passform":passform
+        "usuarioform": usuarioform
     }
     return render(request, "polls/modificar_usuario.html", context)
-
-
-
 
 def add_user_view(request):
     if request.method == 'POST' :
@@ -209,7 +199,7 @@ def enviar_email(media_id):
     send_mail(
         'Clip agregado',
         'Se ha agregado un clip a: ' + media.titulo,
-        'sw.jmojica@gmail.com',
+        'ms.zulmac@gmail.com',
         [media.user.email],
         fail_silently=False,
     )

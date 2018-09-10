@@ -114,6 +114,7 @@
                 dataType: "json",
                 success: function (data) {
                     window.location.reload();
+                    console.log("No recargo")
                 },
                 failure: function (errMsg) {
                     showAddClipError("Hubo un error.");
@@ -143,28 +144,50 @@
     {% if user.is_authenticated %}
     <div class="container-fluid">
         <div class="ui-widget-content ui-corner-all col-lg-12 clip_container">
-            <div class="alert alert-danger" style="display: none;" id="add_clip_error">
-                <label id = "mensaje"></label>
+
+            <!-- Button trigger modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+             Agregar Clip
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">Agregar Clip</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                       <div class="alert alert-danger" style="display: none;" id="add_clip_error">
+                            <label id = "mensaje"></label>
+                        </div>
+                      <p>Ej: 12:05:23 a.m es equivalente al minuto 05:23 del video (el input time no se renderiza igual en todos los navegadores)</p>
+                     <form action="" method="post" onsubmit="return addClip()">
+                        <div class="form_div">
+                            <label for="form_nombre">Nombre</label>
+                            <input type="text" name="form_nombre" id="form_nombre">
+                        </div>
+                        <div class="form_div">
+                            <label for="form_seg_ini">Seg Ini</label>
+                            <input type="time" step="1" name="form_seg_ini" id="form_seg_ini">
+                        </div>
+                        <div class="form_div">
+                            <label for="form_seg_fin">Seg Fin</label>
+                            <input type="time" step="1" name="form_seg_fin" id="form_seg_fin">
+                        </div>
+
+                          <div class="modal-footer">
+                            <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-plus" ></span></button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          </div>
+                   </form>
+                </div>
+              </div>
             </div>
-            <h3>Agregar Clip</h3>
-            <p>Ej: 12:05:23 a.m es equivalente al minuto 05:23 del video (el input time no se renderiza igual en todos los navegadores)</p>
-            <form action="" method="post" onsubmit="return addClip()">
-                <div class="form_div">
-                    <label for="form_nombre">Nombre</label>
-                    <input type="text" name="form_nombre" id="form_nombre">
-                </div>
-                <div class="form_div">
-                    <label for="form_seg_ini">Seg Ini</label>
-                    <input type="time" step="1" name="form_seg_ini" id="form_seg_ini">
-                </div>
-                <div class="form_div">
-                    <label for="form_seg_fin">Seg Fin</label>
-                    <input type="time" step="1" name="form_seg_fin" id="form_seg_fin">
-                </div>
-                <button type="submit" class="btn btn-default">
-                    <span class="glyphicon glyphicon-plus"></span>
-                </button>
-            </form>
+
         </div>
     </div>
     {% endif %}
