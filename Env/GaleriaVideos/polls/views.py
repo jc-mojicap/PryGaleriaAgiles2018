@@ -199,7 +199,7 @@ def enviar_email(media_id):
     send_mail(
         'Clip agregado',
         'Se ha agregado un clip a: ' + media.titulo,
-        'sw.jmojica@gmail.com',
+        'ms.zulmac@gmail.com',
         [media.user.email],
         fail_silently=False,
     )
