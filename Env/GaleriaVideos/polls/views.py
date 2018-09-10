@@ -13,7 +13,8 @@ from django.http import HttpResponse, HttpResponseRedirect, request, HttpRespons
 from django.core.mail import send_mail
 import json
 from datetime import datetime
-from django.core import serializers as jsonserializer
+from django.core import serializers as jsonserializerp
+import os
 
 # API
 @csrf_exempt
@@ -199,7 +200,7 @@ def enviar_email(media_id):
     send_mail(
         'Clip agregado',
         'Se ha agregado un clip a: ' + media.titulo,
-        'ms.zulmac@gmail.com',
+        os.environ.get('smtp_user') + '@gmail.com',
         [media.user.email],
         fail_silently=False,
     )
